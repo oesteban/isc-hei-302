@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Specifying pipelines & Apache Airflow | 22.09.2025</title>
+    <meta charset="utf-8">
+    <meta name="grammarly" content="false">
+    <meta name="google" content="notranslate">
+    <link rel="stylesheet" type="text/css" href="../../remark/asciinema-player/asciinema-player.css?v=5" />
+    <link rel="stylesheet" type="text/css" href="../../remark/hes-so.css?v=5" />
+    <link rel="stylesheet" href="../../remark/roulette.css?v=5" />
+  </head>
+  <body>
+<script src="../../remark/asciinema-player/asciinema-player.min.js?v=5"></script>
+<script src="https://kit.fontawesome.com/015d4b01de.js" crossorigin="anonymous"></script>
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML">
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      processEscapes: true},
+      jax: ["input/TeX","input/MathML","input/AsciiMath","output/CommonHTML"],
+      extensions: ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathMenu.js","MathZoom.js","AssistiveMML.js", "[Contrib]/a11y/accessibility-menu.js"],
+      TeX: {
+      extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"],
+      equationNumbers: {
+      autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+
+<textarea id="source">
+name: title
+layout: true
+class: cover
+---
+count: false
+
+
+.section-mark.center[
+<a href="https://oesteban.github.io/isc-hei-302/week2/day1/index.html">
+  <object type="image/svg+xml" data="images/qr-talk-url.svg" style="width: 20%"></object>
+  <br />
+  https://oesteban.github.io/isc-hei-302/week2/day1/index.html
+</a>
+
+<br />
+<br />
+
+## Specifying pipelines & Apache Airflow
+
+Oscar Esteban &lt;<code>oscar.esteban@hevs.ch</code>>
+
+<br />
+
+### 302 Data computation (week 2, day 1) — 22.09.2025
+]
+
+???
+
+---
+class: roulette-config
+
+.roulette-roster[
+# Class roster (for roulettes)
+
+<div class="rr-config-wrap">
+  <div class="rr-col">
+    <label>Attendees (one per line)</label>
+    <div contenteditable="true"
+              role="textbox"
+              aria-multiline="true"
+              data-roulette="attendees"
+              data-gramm="false"
+              data-gramm_editor="false"
+              data-lt-active="false"
+              data-lpignore="true"
+              spellcheck="false"
+              class="notranslate"
+              style="white-space: pre-wrap; min-height: 240px; padding: .5rem; border: 1px solid #ccc; border-radius: 6px;"><!--
+-->Ada Lovelace
+Grace Hopper
+Alan Turing
+</div>
+  <div class="rr-col">
+    <label>Organizers (one per line)</label>
+    <div contenteditable="true"
+              role="textbox"
+              aria-multiline="true"
+              data-roulette="organizers"
+              data-gramm="false"
+              data-gramm_editor="false"
+              data-lt-active="false"
+              data-lpignore="true"
+              class="notranslate"
+              spellcheck="false"
+              style="white-space: pre-wrap; min-height: 240px; padding: .5rem; border: 1px solid #ccc; border-radius: 6px;"></div>
+  </div>
+</div>
+]
+
+---
+name: title
+count: false
+counter: false
+
+.section-mark.center[
+<a href="https://oesteban.github.io/isc-hei-302/week2/day1/index.html">
+  <object type="image/svg+xml" data="images/qr-talk-url.svg" style="width: 20%"></object>
+  <br />
+  https://oesteban.github.io/isc-hei-302/week2/day1/index.html
+</a>
+
+<br />
+<br />
+
+## Specifying pipelines & Apache Airflow
+
+Oscar Esteban &lt;<code>oscar.esteban@hevs.ch</code>>
+
+<br />
+
+### 302 Data computation (week 2, day 1) — 22.09.2025
+]
+
+???
+
+---
+name: newsection
+layout: true
+
+.perma-sidebar[
+<p class="rotate">
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0; height: 20px; padding-top: 6px;" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a>
+  <span style="padding-left: 10px; font-weight: 600;">Specifying pipelines & Apache Airflow (22.09.2025)</span>
+</p>
+]
+
+---
+
+# Objectives
+
+.boxed-content.larger.no-bullet[
+* .large[<i class="fa-solid fa-circle-right"></i> Explain **data transformations**]
+  <br /> .indent[.gray-text[and identify/create examples]]
+  <br />
+* .large[<i class="fa-solid fa-circle-right"></i> Recognize how **tasks depend on one another**]
+  <br /> .indent[.gray-text[without feedback loops, contrast pipelines vs. representations of the internal flow of tasks]]
+  <br />
+* .large[<i class="fa-solid fa-circle-right"></i> Apply **DAGs** to represent pipelines]
+  <br /> .indent[.gray-text[correctly encoding tasks and dependencies, and understand pipeline nesting/flattening]]
+  <br />
+* .large[<i class="fa-solid fa-circle-right"></i> **ETL vs. ELT**, **warehouse/mart vs. lake**.]
+  <br />
+  <br />
+* .large[<i class="fa-solid fa-circle-right"></i> Describe the notion of **scaling** and **resource limitations**]
+  <br /> .indent[.gray-text[e.g., laptop vs. HPC]]
+  <br />
+* .large[<i class="fa-solid fa-circle-right"></i> Establish a functional **Docker environment**.]
+  <br /> .indent[.gray-text[Execute processing tasks on a laptop given a Docker environment with a prepared Jupyter notebook.]]
+]
+
+---
+
+# Schedule
+
+.boxed-content.program-table[
+| Time | Content |
+|:--:|:--|
+| 9h20 | Quick quiz (**not graded**). |
+| 9h40 | Explaining a pipeline (**intro**). |
+| 9h50 | .gray-text[Break] |
+| 10h10 | **Roulette**: Explaining a pipeline (game). |
+| 10h40 | **Class**: from the pipeline to DAGs. |
+| 11h15 | **Guided tutorial**: Docker primer |
+| 11h45 | .gray-text[Lunch break] |
+| | |
+| 12h45 | **Lab**: brain pipeline |
+| 15h20 | Quick quiz (repetition) |
+| 15h35 | Discussion of quiz & **outlook** for next session |
+| 15h50 | Voluntary time |
+| 16h10 | .gray-text[End] |
+]
+
+---
+
+.section-mark[
+# Quick quiz
+
+.large[20 minutes, not graded]
+]
+
+---
+
+.section-mark[
+# Short break
+
+.large[We reconvene .timer[in 10 minutes].]
+]
+
+---
+
+.section-mark[
+# Short break
+
+.large[We reconvene .timer[in 10 minutes].]
+]
+
+---
+
+.section-mark[
+# Lunch break
+
+.large[We reconvene in <span class="timer">1 hour</span>.]
+]
+
+---
+
+.section-mark[
+# Quick quiz (repeat)
+
+.large[20 minutes, not graded]
+]
+
+---
+
+.section-mark[
+# Concluding
+
+.large[Discuss the quiz answers and outlook for next session]
+]
+
+---
+
+.section-mark[
+# End
+
+.large[
+See you next time: 25.09.2025 @ 8h15 (in <span class="timer" data-until="2025-09-25T08:15:00+02:00"></span>)
+
+[<i class="fa-solid fa-circle-left"></i>](../../week1/day2/index.html)
+[<i class="fa-solid fa-home"></i>](#1)
+[<i class="fa-solid fa-circle-right"></i>](../../week2/day2/index.html)
+]
+]
+
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+    <script>
+      // Use: ![:img Alt text with spaces but not commas, 50%](image.png)
+      remark.macros.img = function (altText, width) {
+        var url = this;
+        return '<img alt="' + altText + '" src="' + url + '" style="width: ' + width + '" />';
+      };
+      // Use: ![:video](10.5129/10234)
+      remark.macros.video = function (width) {
+        var url = this;
+        return '<video src="' + url + '" width="' + width + '" preload="auto" controls />';
+      };
+      // Use: ![:doi](10.5129/10234)
+      remark.macros.doi = function () {
+        var doi = this;
+        return '<a href="https://doi.org/' + doi + '">' + doi + '</a>';
+      };
+
+      var slideshow = remark.create({
+          highlightStyle: 'monokai',
+          highlightLanguage: 'remark',
+          highlightLines: true,
+          countIncrementalSlides: false,
+          highlightSpans: true,
+          ratio: '16:9'
+      });
+
+      // Now retrieve all IDs of asciinema casts
+      const allcasts = new Map();
+
+      slideshow.on('afterShowSlide', function (slide) {
+        // Slide is the slide being navigated
+        var slideNumber = slide.getSlideIndex();
+        var element = document.getElementsByClassName("remark-visible")[0].getElementsByClassName('asciicast')
+        if (element.length == 0 ) {
+          return;
+        }
+
+        if (allcasts.has(slideNumber)) {
+          allcasts.get(slideNumber).play();
+          return;
+        }
+
+        var castid = element[0].attributes["id"].value;
+        allcasts.set(slideNumber, AsciinemaPlayer.create(
+            `images/${castid}.cast`,
+            document.getElementById(castid),
+            { autoPlay: true, speed: 1, idle_time_limit: 8, rows: 24, cols: 100 }
+        ));
+
+      });
+      slideshow.on('beforeHideSlide', function (slide) {
+        // Slide is the slide being navigated
+        var slideNumber = slide.getSlideIndex();
+        if (allcasts.has(slideNumber)) {
+          allcasts.get(slideNumber).pause();
+        }
+      });
+    </script>
+    <script>
+    (function attachTimers(slideshow) {
+      const SEL = 'span.timer';
+
+      // --- tiny parser: "1h 5m 30s", "10 min", "mm:ss", "hh:mm:ss", or bare minutes ---
+      function parseSecs(s) {
+        s = (s || '').trim().toLowerCase();
+        let m;
+        if ((m = s.match(/^(\d{1,2}):([0-5]?\d):([0-5]?\d)$/))) return (+m[1])*3600 + (+m[2])*60 + (+m[3]);
+        if ((m = s.match(/^([0-5]?\d):([0-5]?\d)$/)))          return (+m[1])*60   + (+m[2]);
+        let total = 0, hit = false;
+        s.replace(/(\d+(?:\.\d+)?)\s*(h|hr|hrs|hour|hours|m|min|mins|minute|minutes|s|sec|secs|second|seconds)\b/g,
+          (_, n, u) => { hit = true; n = parseFloat(n);
+            if (/^h/.test(u)) total += Math.round(n*3600);
+            else if (/^m(?!s)/.test(u)) total += Math.round(n*60);
+            else total += Math.round(n);
+          });
+        if (hit) return total;
+        const bare = parseFloat(s);
+        return Number.isFinite(bare) ? Math.round(bare*60) : null; // bare number = minutes
+      }
+      function fmt(secs) {
+        secs = Math.max(0, Math.floor(secs));
+        const h = Math.floor(secs/3600), m = Math.floor((secs%3600)/60), s = secs%60;
+        return h ? `${h} hr ${m} min` : (m ? `${m} min ${s} sec` : `${s} sec`);
+      }
+
+      function start(el, secs) {
+        if (el.dataset.timerRunning === '1') return;
+        if (!el.dataset.original) el.dataset.original = el.textContent;
+        el.dataset.timerRunning = '1';
+        el.classList.add('started');
+        const end = Date.now() + secs*1000;
+        const tick = () => {
+          const remain = Math.max(0, Math.floor((end - Date.now())/1000));
+          el.textContent = fmt(remain);
+          if (remain <= 0) { stop(el); el.classList.add('finished'); if (el.dataset.done) el.textContent = el.dataset.done; }
+        };
+        el.dataset.timerId = String(setInterval(tick, 500));
+        tick();
+      }
+      function stop(el) { if (el.dataset.timerId) clearInterval(+el.dataset.timerId); delete el.dataset.timerId; delete el.dataset.timerRunning; }
+      function reset(el) { stop(el); el.classList.remove('started','finished'); if (el.dataset.original) el.textContent = el.dataset.original; }
+
+      function initIn(root) {
+        root.querySelectorAll(SEL).forEach(el => {
+          let secs = el.dataset.seconds ? parseInt(el.dataset.seconds,10) : null;
+          if (!Number.isFinite(secs) && el.dataset.until) {
+            const until = new Date(el.dataset.until); if (!isNaN(+until)) secs = Math.max(0, Math.round((until - Date.now())/1000));
+          }
+          if (!Number.isFinite(secs)) secs = parseSecs(el.textContent);
+          if (Number.isFinite(secs)) start(el, secs);
+        });
+      }
+      function resetIn(root) { root.querySelectorAll(SEL).forEach(reset); }
+
+      const visibleSlideRoots = () =>
+        Array.from(document.querySelectorAll('.remark-slide-container.remark-visible .remark-slide-content'));
+
+      slideshow.on('afterShowSlide', () => visibleSlideRoots().forEach(initIn));
+      slideshow.on('beforeHideSlide', () => visibleSlideRoots().forEach(resetIn));
+
+      // kick the initially rendered slide
+      visibleSlideRoots().forEach(initIn);
+    })(slideshow);
+    </script>
+    <!-- Add the roulette module -->
+    <script src="../../remark/roulette.js?v=4"></script>
+    <script>
+      // Initialize once
+      Roulette.init(slideshow);
+    </script>
+  </body>
+</html>
