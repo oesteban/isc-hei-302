@@ -144,41 +144,40 @@ layout: true
 # Objectives
 
 .boxed-content.larger.no-bullet[
-* .large[<i class="fa-solid fa-circle-right"></i> Explain **data transformations**]
-  <br /> .indent[.gray-text[and identify/create examples]]
+* .larger[<i class="fa-solid fa-circle-right"></i> Solve problems with  **containers**]
+  <br /> .indent[.gray-text[and describe the differences with virtual machines]]
   <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Recognize how **tasks depend on one another**]
-  <br /> .indent[.gray-text[without feedback loops, contrast pipelines vs. representations of the internal flow of tasks]]
+* .larger[<i class="fa-solid fa-circle-right"></i> Explain the *Docker* **containers** and **images**]
+  <br /> .indent[.gray-text[including layers, Dockerfile, and registries]]
   <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Apply **DAGs** to represent pipelines]
-  <br /> .indent[.gray-text[correctly encoding tasks and dependencies, and understand pipeline nesting/flattening]]
+* .larger[<i class="fa-solid fa-circle-right"></i> Build *Docker* **images** and edit the `Dockerfile`]
+  <br /> .indent[.gray-text[understanding layer chaching and multi-stage builds]]
   <br />
-* .large[<i class="fa-solid fa-circle-right"></i> **ETL vs. ELT**, **warehouse/mart vs. lake**.]
+* .larger[<i class="fa-solid fa-circle-right"></i> Execute commands in *Docker* **containers**]
+  <br /> .indent[.gray-text[applying volume mounts, networking, and user mapping]]
   <br />
+* .larger[<i class="fa-solid fa-circle-right"></i> Use *Docker compose* to orchestrate containers]
+  <br /> .indent[.gray-text[and deploy a basic *Apache Airflow* environment]]
   <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Describe the notion of **scaling** and **resource limitations**]
-  <br /> .indent[.gray-text[e.g., laptop vs. HPC]]
-  <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Establish a functional **Docker environment**.]
+* .larger[<i class="fa-solid fa-circle-right"></i> Establish a functional **Docker environment**.]
   <br /> .indent[.gray-text[Execute processing tasks on a laptop given a Docker environment with a prepared Jupyter notebook.]]
 ]
 
 ---
 
-# Schedule
-
 .boxed-content.program-table[
 | Time | Content |
 |:--:|:--|
-| 9h20 | Quick quiz (**not graded**). |
-| 9h40 | Explaining a pipeline (**intro**). |
-| 9h50 | .gray-text[Break] |
-| 10h10 | **Roulette**: Explaining a pipeline (game). |
-| 10h40 | **Class**: from the pipeline to DAGs. |
-| 11h15 | **Guided tutorial**: Docker primer |
+| 8h15 | Quick quiz (**not graded**). |
+| 8h35 | **Roulette**: What do you know/want to know about containers? |
+| 9h05 | .gray-text[Break] |
+| 9h15 | **Intro&challenge**: the first `Dockerfile` |
+| 9h45 | **Intro&challenge**: the neuroimaging container |
+| 10h05 | .gray-text[Short break] |
+| 10h15 | **Challenge**: Exploring the neuroimaging container. | <!-- 11h15 evaluation of challenge: groups present their progress -->
 | 11h45 | .gray-text[Lunch break] |
 | | |
-| 12h45 | **Lab**: brain pipeline |
+| 12h45 | **Lab**: Docker compose |
 | 15h20 | Quick quiz (repetition) |
 | 15h35 | Discussion of quiz & **outlook** for next session |
 | 15h50 | Voluntary time |
@@ -191,6 +190,23 @@ layout: true
 # Quick quiz
 
 .large[20 minutes, not graded]
+]
+
+---
+class: roulette
+time: 45
+
+.section-mark[
+# Roulette
+
+.large[What do you know/want to know about containers?]
+
+.larger.gray-text[
+* <i class="fa-solid fa-triangle-exclamation"></i> Problems/caveats/gaps <i class="fa-solid fa-triangle-exclamation"></i>
+* <i class="fa-solid fa-circle-question"></i> Questions <i class="fa-solid fa-circle-question"></i>
+* <i class="fa-solid fa-ranking-star"></i> Benefits/strengths/interest <i class="fa-solid fa-ranking-star"></i>
+* <i class="fa-solid fa-comment"></i> Opinions/remarks/comments/discussion <i class="fa-solid fa-comment"></i>
+]
 ]
 
 ---
