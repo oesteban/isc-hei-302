@@ -1,7 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Urbanist:400,800,400italic);
-@import url(https://fonts.googleapis.com/css?family=Inter:400,800,400italic);
 @import url(https://fonts.googleapis.com/css?family=Arimo:400,800,400italic);
 @import url(https://fonts.googleapis.com/css?family=Roboto+Mono:400,800,400italic);
+@import url(https://fonts.googleapis.com/css?family=Goudy+Bookletter+1911:400,800,400italic);
 
 .blur {
     -webkit-filter: blur(5px) opacity(.3);
@@ -587,7 +587,7 @@ blockquote {
   padding: 1em 10px 0.5em 30px;
   font-size: 1.5em;
   font-style: italic;
-  font-family: serif;
+  font-family: "Goudy Bookletter 1911";
   quotes: "\201C""\201D""\2018""\2019";
 }
 
@@ -604,3 +604,49 @@ blockquote p {
 }
 
 .remark-slide-content.cover .remark-slide-number { display: none !important; }
+
+:root{
+  /* tweak to taste */
+  --logo-url: url("../../remark/assets/isc_logo.png"); 
+  --logo-width: clamp(80px, 14vw, 160px);               /* responsive width */
+  --logo-opacity: 0.5;                                  /* 0 (invisible) → 1 (solid) */
+  --logo-offset-x: 24px;                                 /* distance from right edge */
+  --logo-offset-y: 16px;                                 /* distance from top edge */
+  --logo-aspect: 3 / 1;                                  /* adjust for your logo */
+}
+
+/* Anchor overlay to each slide’s content box */
+.remark-slide-content{ position: relative; }
+
+/* Paint the logo as an overlay */
+.remark-slide-content::after{
+  content: "";
+  position: absolute;
+  top: var(--logo-offset-y);
+  right: var(--logo-offset-x);
+  width: var(--logo-width);
+  aspect-ratio: var(--logo-aspect);
+  background-image: var(--logo-url);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: top right;
+  opacity: var(--logo-opacity);
+  pointer-events: none;        /* never block clicks */
+  z-index: 20;                 /* under your roulette controls (which are z=100) */
+  /* Optional: make it blend softly over colored backgrounds */
+  /* mix-blend-mode: multiply; */
+}
+
+/* Hide on print if you want a cleaner PDF */
+@media print{
+  .remark-slide-content::after{ display: none; }
+}
+
+/* Per-slide opt-out: add `class: no-logo` in the slide header */
+.remark-slide-content.no-logo::after{ display: none !important; }
+
+/* Optional: smaller/lighter variant per slide with `class: small-logo` */
+.remark-slide-content.small-logo{
+  --logo-width: 90px;
+  --logo-opacity: 0.18;
+}
