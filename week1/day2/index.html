@@ -196,17 +196,36 @@ layout: true
 class: roulette
 time: 45
 
-.section-mark[
 # Roulette
 
-.large[What do you know/want to know about containers?]
+.boxed-content[
+.pull-right.large[
+What do you know/want to know about containers?
 
-.larger.gray-text[
-* <i class="fa-solid fa-triangle-exclamation"></i> Problems/caveats/gaps <i class="fa-solid fa-triangle-exclamation"></i>
-* <i class="fa-solid fa-circle-question"></i> Questions <i class="fa-solid fa-circle-question"></i>
-* <i class="fa-solid fa-ranking-star"></i> Benefits/strengths/interest <i class="fa-solid fa-ranking-star"></i>
-* <i class="fa-solid fa-comment"></i> Opinions/remarks/comments/discussion <i class="fa-solid fa-comment"></i>
+.no-bullet.gray-text[
+* <i class="fa-solid fa-ranking-star"></i> Benefits/strengths/interest
+
+* <i class="fa-solid fa-triangle-exclamation"></i> Problems/caveats/gaps
+
+* <i class="fa-solid fa-circle-question"></i> Questions
+
+* <i class="fa-solid fa-comment"></i> Opinions/remarks/comments/discussion
 ]
+]
+
+.pull-left[
+> <br />
+> — Your code doesn't work.
+> <br />
+> — It works on my machine!
+> <br />
+> — Pack it, and ship it to the client.
+
+.center[
+<img alt="It works on my machine!" src="images/when-the-developers.jpg" style="width: 70%"/>
+]
+]
+
 ]
 
 ---
@@ -218,6 +237,76 @@ time: 45
 ]
 
 ---
+
+# What's Docker?
+
+.boxed-content.larger[
+> Docker is a set of [platform as a service](https://en.wikipedia.org/wiki/Platform_as_a_service) (PaaS) products that use [OS-level virtualization](https://en.wikipedia.org/wiki/OS-level_virtualization) to deliver software in packages called [containers](https://en.wikipedia.org/wiki/Container_%28virtualization%29).
+> <br />
+> <br />
+> (...)
+> <br />
+> <br />
+> Docker is a tool that is used to automate the **deployment** of **applications** in lightweight **containers** so that applications can work efficiently in different environments in isolation. 
+
+.align-right[
+[Wikipedia](https://en.wikipedia.org/wiki/Docker_%28software%29)
+]
+
+]
+???
+
+---
+
+# Containers vs. virtual machines
+
+.boxed-content.center[
+<img src="https://wac-cdn.atlassian.com/dam/jcr:92adde69-f728-4cfc-8bab-ba391c25ae58/SWTM-2060_Diagram_Containers_VirtualMachines_v03.png" style="width: 100%; padding-top: 20px;"/>
+
+.align-right[
+Source: [Atlassian](https://www.atlassian.com/microservices/cloud-computing/containers-vs-vms)
+]
+]
+
+???
+
+---
+
+.boxed-content[
+<div class="asciicast" id="docker-whalesay" style="padding-top: 25px"></div>
+]
+
+---
+
+# Concepts
+
+Image = immutable filesystem + metadata.
+
+Container = runtime instance of an image.
+
+Whalesay works the same in all your computers.
+
+???
+
+---
+
+# The first Dockerfile (`oesteban/whalesay`)
+
+.boxed-content[
+.large[
+```dockerfile
+FROM alpine
+RUN apk add --no-cache perl
+COPY cowsay /usr/local/bin/cowsay
+COPY docker.cow /usr/local/share/cows/default.cow
+ENTRYPOINT ["/usr/local/bin/cowsay"]
+```
+]]
+
+???
+
+---
+
 
 .section-mark[
 # Short break
