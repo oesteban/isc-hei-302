@@ -602,3 +602,5 @@ blockquote:before {
 blockquote p {
   display: inline;
 }
+
+.remark-slide-content.cover .remark-slide-number { display: none !important; }
