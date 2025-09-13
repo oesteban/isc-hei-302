@@ -1,0 +1,79 @@
+:root {
+  --rr-ring-size: 96px;     /* overall ring box (w=h) */
+  --rr-time-size: 1.5rem;     /* countdown font size */
+  --rr-time-weight: 800;    /* countdown weight */
+  --rr-overlay-left: 55px;
+}
+
+/* Scope positioning to roulette slides only */
+.remark-slide-content.roulette { position: relative; }
+
+/* Top floating controls (don’t affect layout) */
+.rr-controls{
+  position:absolute; top:10px; left:50%; transform:translateX(-50%);
+  display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+  z-index: 100; pointer-events: auto;
+  background: rgba(255,255,255,.85); padding:.35rem .6rem; border-radius:8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.rr-controls label{ font-size: 0.95rem; }
+.rr-controls input[type="number"]{ width:6em; }
+.rr-controls input[type="text"]{ width:12em; }
+.rr-controls .rr-sep{ opacity:.35; }
+.rr-hidden{ display:none !important; }
+
+/* Bottom-left overlay container (ring + name) */
+.rr-overlay{
+  position:absolute; left:var(--rr-overlay-left, 20px); bottom:20px; z-index: 90;
+  display:flex; align-items:center; gap:14px; pointer-events:none;
+  color: var(--rr-fg, #111827);
+}
+
+/* Progress ring (left) */
+.rr-progress{ position:relative; width:var(--rr-ring-size); height:var(--rr-ring-size); }
+.rr-progress svg{ width:100%; height:100%; transform:rotate(-90deg); }
+.rr-progress .rr-bg{ stroke:#e5e7eb; stroke-width:10; fill:none; }
+.rr-progress .rr-fg{ stroke: currentColor; stroke-width:10; stroke-linecap:round; fill:none; }
+.rr-progress .rr-time{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  font-size:var(--rr-time-size); font-weight:var(--rr-time-weight);
+  color:#111827;
+  background: rgba(255,255,255,.85); padding:.2rem .5rem; border-radius:6px;
+}
+
+/* Current name (right) */
+.rr-name{
+  max-width: 55vw; font-size: 2rem; line-height: 1.1; font-weight: 800;
+  background: rgba(255,255,255,.88); padding: 6px 10px; border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.10);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 0;
+}
+
+/* Config slide editors */
+.rr-config-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top: 16px; }
+.rr-config-wrap [data-roulette]{
+  width:100%; min-height:240px; font-size:0.95rem; display:block;
+  white-space:pre-wrap; padding:.5rem; border:1px solid #ccc; border-radius:6px;
+}
+.rr-config-wrap .rr-col > label{ font-weight:600; display:block; margin-bottom: 6px; }
+.rr-help{ font-size: .85rem; opacity: .8; margin-top: 6px; }
+
+@media (max-width: 1000px) {
+  .rr-config-wrap{ grid-template-columns:1fr; }
+  .rr-name{ font-size: 4.0em; max-width: 65vw; }
+  .rr-progress{ width:calc(var(--rr-ring-size) - 12px); height:calc(var(--rr-ring-size) - 12px); }
+  .rr-progress .rr-time{ font-size:calc(var(--rr-time-size) - 0.2rem); }
+}
+
+.roulette-roster {
+  margin-left: 30px;
+}
+
+/* Optional dark-mode polish */
+/* @media (prefers-color-scheme: dark) {
+  .rr-controls,
+  .rr-progress .rr-time,
+  .rr-name { background: rgba(0,0,0,.35); color: #fff; }
+  .rr-progress .rr-bg{ stroke:#374151; }
+} */
