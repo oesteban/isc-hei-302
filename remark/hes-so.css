@@ -634,7 +634,7 @@ blockquote p {
   pointer-events: none;        /* never block clicks */
   z-index: 20;                 /* under your roulette controls (which are z=100) */
   /* Optional: make it blend softly over colored backgrounds */
-  /* mix-blend-mode: multiply; */
+  mix-blend-mode: multiply;
 }
 
 /* Hide on print if you want a cleaner PDF */
