@@ -192,7 +192,7 @@ layout: true
 | 10h15 | **Challenge**: Exploring the neuroimaging container. | <!-- 11h15 evaluation of challenge: groups present their progress -->
 | 11h45 | .gray-text[Lunch break] |
 | | |
-| 12h45 | **Lab**: Docker compose |
+| 12h45 | **Group use-case**: Docker compose |
 | 15h20 | Quick quiz (repetition) |
 | 15h35 | Discussion of quiz & **outlook** for next session |
 | 15h50 | Voluntary time |
@@ -743,6 +743,42 @@ seed: 18.09.2025
 # Lunch break
 
 .large[We reconvene in <span class="timer">1 hour</span>.]
+]
+
+---
+
+# Group use-case
+
+
+.boxed-content[
+.small[
+> Samira, the most valued employee at your company *We build stuff s.a.r.l.*, left one week ago for Meta.
+> The CTO tried hard to keep her, but the offer was just too good to reject. <br /><br />
+> Now the company is in trouble: the largest client needs a solution to build, manage and execute neuroimaging pipelines.
+> The CTO had discussed this with Samira, and he vaguely remembers a conversation with her... <br />
+> — ... that they could easily use *Docker compose* (whatever that means)... <br />
+> — ... to *orchestrate* different *Docker images* with neuroimaging software... <br />
+> — ... and create and execute those pipelines with a *Docker container* running *Apache Airflow* with DAGs that use the *DockerOperator*. <br /><br />
+> The one thing the CTO knows is that **your team has 2h to implement this**.
+]
+
+.large[After those 2h, your team will have 7-8 minutes to show their progress]
+]
+
+---
+count: false
+class: group-roulette
+groups: 5
+seed: 18.09.2025
+
+.boxed-content[
+# Group use-case
+
+.large[
+Understand *Docker compose*, run *Apache Airflow* and enable it to use the `oesteban/neuropipeline-302` image.
+
+We reconvene in .timer[2h].
+]
 ]
 
 ---
