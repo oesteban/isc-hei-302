@@ -782,15 +782,37 @@ seed: 18.09.2025
 .small[
 > Samira, the most valued employee at your company *We build stuff s.a.r.l.*, left one week ago for Meta.
 > The CTO tried hard to keep her, but the offer was just too good to reject. <br /><br />
-> Now the company is in trouble: the largest client needs a solution to build, manage and execute neuroimaging pipelines.
+> Now the company is in trouble: the largest client needs splitting Jupyter and AFNI in the Docker image.
 > The CTO had discussed this with Samira, and he vaguely remembers a conversation with her... <br />
 > — ... that they could easily use *Docker compose* (whatever that means)... <br />
-> — ... to *orchestrate* different *Docker images* with neuroimaging software... <br />
-> — ... and create and execute those pipelines with a *Docker container* running *Apache Airflow* with DAGs that use the *DockerOperator*. <br /><br />
+> — ... to *orchestrate* a Jupyter container and different *Docker images* with neuroimaging software... <br /><br />
 > The one thing the CTO knows is that **your team has 2h to implement this**.
 ]
 
-.large[After those 2h, your team will have 7-8 minutes to show their progress]
+.large[After those 2h, your team will have 7-8 minutes to show progress]
+]
+
+---
+
+# Hint
+
+.boxed-content.large[
+Proposed project layout:
+
+```Text
+compose-neuro/
+├─ docker-compose.yml
+├─ .env
+├─ notebook/
+│  └─ Dockerfile  # Extend jupyter/minimal-notebook:python-3.11
+├─ project/
+│  ├─ data/       # Installation of ds000005
+│  ├─ outputs/
+│  └─ notebooks/
+│     └─ brain_mri_pipeline.ipynb
+└─ afni-slim/
+   └─ Dockerfile  # Remove unnecessary steps and ship only AFNI
+```
 ]
 
 ---
