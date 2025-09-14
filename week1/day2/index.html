@@ -166,7 +166,7 @@ layout: true
   <br /> .indent[.gray-text[including layers, Dockerfile, and registries]]
   <br />
 * .larger[<i class="fa-solid fa-circle-right"></i> Build *Docker* **images** and edit the `Dockerfile`]
-  <br /> .indent[.gray-text[understanding layer chaching and multi-stage builds]]
+  <br /> .indent[.gray-text[understanding layer caching and multi-stage builds]]
   <br />
 * .larger[<i class="fa-solid fa-circle-right"></i> Execute commands in *Docker* **containers**]
   <br /> .indent[.gray-text[applying volume mounts, networking, and user mapping]]
@@ -375,6 +375,7 @@ Main caveats of VMs vs containers—each VM needs a full OS:
 * Slow to boot (minutes)
 * More resource hungry (RAM, CPU). Eg., 2 VMs with 2GB RAM each on a host with 4GB RAM will likely
   lead to swapping and very poor performance.
+* More HPC-friendly (though, Docker is generally not found in HPC settings)
 
 Benefits of VMs vs containers—each VM is fully isolated:
 * More secure (stronger isolation)
@@ -704,6 +705,33 @@ CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--al
 ]
 
 ???
+
+---
+
+# Ready to run (suggestions)
+
+.boxed-content[
+.large[
+Communicate host and container filesystems:
+
+```Bash
+mkdir -p work outputs
+docker run --rm -it -p 8888:8888 \
+  -v "$PWD/work":/home/databot/work \
+  -v "$PWD/outputs":/home/databot/outputs \
+  -u $(id -u):$(id -g) \
+  --name neuro302 \
+  oesteban/neuropipeline-302
+```
+]
+On another terminal:
+
+.large[
+```Bash
+docker exec -it neuro302 bash -lc 'id; ls -l /home/databot'
+```
+]
+]
 
 ---
 
