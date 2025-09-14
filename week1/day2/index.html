@@ -219,7 +219,7 @@ What do you know/want to know about containers?
 > <br />
 > — It works on my machine!
 > <br />
-> — Pack it, and ship it to the client.
+> — Then pack that machine and ship it to the client.
 
 .center[
 <img alt="It works on my machine!" src="images/when-the-developers.jpg" style="width: 70%"/>
@@ -227,6 +227,26 @@ What do you know/want to know about containers?
 ]
 
 ]
+
+???
+
+Reasons why 'it works [only] on my machine':
+
+* One or more files are missing (meaning, the installation is not reproducible).
+* Software versions mismatch (e.g., Python 3.8 vs 3.10, or a dependency).
+* Different settings:
+  * Environment variables different or not set (e.g., `PATH`, `PYTHONPATH`, etc.).
+  * Configuration files
+  * Permissions
+  * Platform specific settings (e.g., slightly different hardware)
+
+
+Examples of why:
+
+* Deployment on production
+* A new recruit joins the team
+* Version control of deployiment settings (`Dockerfile`)
+
 
 ---
 
@@ -249,12 +269,38 @@ What do you know/want to know about containers?
 > <br />
 > Docker is a tool that is used to automate the **deployment** of **applications** in lightweight **containers** so that applications can work efficiently in different environments in isolation. 
 
-.align-right[
+.align-right.small[
 [Wikipedia](https://en.wikipedia.org/wiki/Docker_%28software%29)
+]
+]
+???
+
+---
+count:false
+
+# What's Docker?
+
+.boxed-content.larger[
+> Docker is a set of [platform as a service](https://en.wikipedia.org/wiki/Platform_as_a_service) (PaaS) products that use [OS-level virtualization](https://en.wikipedia.org/wiki/OS-level_virtualization) to deliver software in packages called [containers](https://en.wikipedia.org/wiki/Container_%28virtualization%29).
+> <br />
+> <br />
+> (...)
+> <br />
+> <br />
+> Docker is a tool that is used to automate the **deployment** of **applications** in lightweight **containers** so that applications can work efficiently in different environments in isolation. 
+
+.align-right.small[
+[Wikipedia](https://en.wikipedia.org/wiki/Docker_%28software%29)
+]
+
+.large.center[
+**Consistently** build, run and ship applications.
 ]
 
 ]
 ???
+
+This is why companies  
 
 ---
 
@@ -263,12 +309,60 @@ What do you know/want to know about containers?
 .boxed-content.center[
 <img src="https://wac-cdn.atlassian.com/dam/jcr:92adde69-f728-4cfc-8bab-ba391c25ae58/SWTM-2060_Diagram_Containers_VirtualMachines_v03.png" style="width: 100%; padding-top: 20px;"/>
 
-.align-right[
+.align-right.small[
 Source: [Atlassian](https://www.atlassian.com/microservices/cloud-computing/containers-vs-vms)
 ]
 ]
 
 ???
+
+* Containers share the host OS kernel, and isolate the application processes from the rest of the system.
+* Virtual machines simulate the physical hardware and install a full OS stack with its own kernel.
+
+BOTH run apps on isolated environments.
+
+**Hypervisor**: software layer that leverages hardware (directly—type 1,—or through the OS—type 2)
+virtualization to create and run virtual machines.
+
+* VirtualBox (type 2, cross-platform)
+* VMware (type 2, cross-platform)
+* KVM (type 2, Linux)
+* bhyve (type 2, FreeBSD)
+* Parallels (type 2, macOS)
+* Xen (type 1, Linux)
+* VMware ESXi (type 1, server)
+* Hyper-V (type 1, Windows)
+
+---
+count: false
+
+# Containers vs. virtual machines
+
+.boxed-content.center[
+<img src="https://wac-cdn.atlassian.com/dam/jcr:92adde69-f728-4cfc-8bab-ba391c25ae58/SWTM-2060_Diagram_Containers_VirtualMachines_v03.png" style="width: 100%; padding-top: 20px;"/>
+
+.align-right.small[
+Source: [Atlassian](https://www.atlassian.com/microservices/cloud-computing/containers-vs-vms)
+]
+
+> — It works on my (virtual) machine
+
+]
+
+???
+
+In terms of deployment, unless you ship the whole VM image
+(which is large and may not be portable to the new hardware),
+we still may hit 'it works on my (virtual) machine'.
+
+Main caveats of VMs vs containers—each VM needs a full OS:
+* Heavy (GBs)
+* Slow to boot (minutes)
+* More resource hungry (RAM, CPU). Eg., 2 VMs with 2GB RAM each on a host with 4GB RAM will likely
+  lead to swapping and very poor performance.
+
+Benefits of VMs vs containers—each VM is fully isolated:
+* More secure (stronger isolation)
 
 ---
 
@@ -276,17 +370,13 @@ Source: [Atlassian](https://www.atlassian.com/microservices/cloud-computing/cont
 <div class="asciicast" id="docker-whalesay" style="padding-top: 25px"></div>
 ]
 
----
-
-# Concepts
+???
 
 Image = immutable filesystem + metadata.
 
 Container = runtime instance of an image.
 
 Whalesay works the same in all your computers.
-
-???
 
 ---
 
@@ -301,12 +391,39 @@ COPY cowsay /usr/local/bin/cowsay
 COPY docker.cow /usr/local/share/cows/default.cow
 ENTRYPOINT ["/usr/local/bin/cowsay"]
 ```
+
+[`FROM`](https://docs.docker.com/reference/dockerfile/#from) indicates a base image (`alpine`)
+
+[`RUN`](https://docs.docker.com/reference/dockerfile/#run) executes commands in the image being built (`apk add`)
+
+[`COPY`](https://docs.docker.com/reference/dockerfile/#copy) copies files from the build context into the image
+
+[`ENTRYPOINT`](https://docs.docker.com/reference/dockerfile/#entrypoint) configures a container that will be run from the image
+
 ]]
 
 ???
 
 ---
 
+.boxed-content[
+<div class="asciicast" id="docker-build" style="padding-top: 25px"></div>
+]
+
+???
+
+---
+class: group-roulette
+groups: 5
+seed: "18.09.2025"
+
+# **Group Challenge**: the coolest *cow*.
+
+.text-gray.large[In groups of three, edit the `Dockerfile` to create a cool *cow*.]
+
+???
+
+---
 
 .section-mark[
 # Short break
