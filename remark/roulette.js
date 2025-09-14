@@ -5,71 +5,6 @@
 (function () {
   'use strict';
 
-  // ---------- Styles ----------
-  function injectStyles() {
-    if (document.getElementById('rr-styles')) return;
-    const css = `
-      /* Anchor overlays to the visible slide */
-      .remark-slide-content { position: relative; }
-
-      /* Top floating controls (don’t affect layout) */
-      .rr-controls{
-        position:absolute; top:10px; left:50%; transform:translateX(-50%);
-        display:flex; gap:12px; align-items:center; flex-wrap:wrap;
-        z-index: 100; pointer-events: auto;
-        background: rgba(255,255,255,.85); padding:.35rem .6rem; border-radius:8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,.08);
-      }
-      .rr-controls label{ font-size: 0.95rem; }
-      .rr-controls input[type="number"]{ width:6em; }
-      .rr-controls input[type="text"]{ width:12em; }
-      .rr-controls .rr-sep{ opacity:.35; }
-      .rr-hidden{ display:none !important; }
-
-      /* Bottom-left overlay container (name + timer) */
-      .rr-overlay{
-        position:absolute; left:20px; bottom:20px; z-index: 90;
-        display:flex; align-items:center; gap:14px; pointer-events:none;
-        color: var(--rr-fg, #111827);
-      }
-
-      .rr-name{
-        max-width: 55vw; font-size: 2rem; line-height: 1.1; font-weight: 800;
-        background: rgba(255,255,255,.88); padding: 6px 10px; border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,.10);
-        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      }
-
-      .rr-progress{ position:relative; width:140px; height:140px; }
-      .rr-progress svg{ width:100%; height:100%; transform:rotate(-90deg); }
-      .rr-progress .rr-bg{ stroke:#e5e7eb; stroke-width:10; fill:none; }
-      .rr-progress .rr-fg{ stroke: currentColor; stroke-width:10; stroke-linecap:round; fill:none; }
-      .rr-progress .rr-time{
-        position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-        font-size:1.05rem; font-weight:600; color:#111827;
-        background: rgba(255,255,255,.85); padding:.15rem .4rem; border-radius:6px;
-      }
-
-      /* Config slide editors */
-      .rr-config-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top: 16px; }
-      .rr-config-wrap [data-roulette]{
-        width:100%; min-height:240px; font-size:0.95rem; display:block;
-        white-space:pre-wrap; padding:.5rem; border:1px solid #ccc; border-radius:6px;
-      }
-      .rr-config-wrap .rr-col > label{ font-weight:600; display:block; margin-bottom: 6px; }
-      .rr-help{ font-size: .85rem; opacity: .8; margin-top: 6px; }
-      @media (max-width: 1000px) {
-        .rr-config-wrap{ grid-template-columns:1fr; }
-        .rr-name{ font-size: 1.6rem; max-width: 65vw; }
-        .rr-progress{ width:120px; height:120px; }
-      }
-    `;
-    const style = document.createElement('style');
-    style.id = 'rr-styles';
-    style.textContent = css;
-    document.head.appendChild(style);
-  }
-
   // ---------- Utils ----------
   const uniqSort = (arr) => {
     const seen = new Map();
@@ -139,6 +74,7 @@
         if (!root) return;
         if (root.classList.contains('roulette-config')) this._mountConfig(root);
         if (root.classList.contains('roulette')) this._mountRoulette(root);
+        if (root.classList.contains('group-roulette')) this._mountGroupRoulette(root);
       });
 
       // before hiding a slide, commit config or tear down overlays
@@ -147,6 +83,7 @@
         if (!root) return;
         if (root.classList.contains('roulette-config')) this._commitConfig(root);
         if (root.classList.contains('roulette')) this._teardownRoulette();
+        if (root.classList.contains('group-roulette')) this._teardownGroupRoulette();
       });
     },
 
@@ -452,6 +389,151 @@
       }
       return null;
     },
+
+    // ----- GROUP ROULETTE SLIDE -----
+    _parseIntPos(v) {
+      if (v == null) return null;
+      if (typeof v === 'number' && Number.isFinite(v) && v > 0) return Math.floor(v);
+      if (typeof v === 'string') {
+        const n = parseInt(v.trim(), 10);
+        return (Number.isFinite(n) && n > 0) ? n : null;
+      }
+      return null;
+    },
+    _getHeaderGroups(root) {
+      const P = this._currentSlideProps || {};
+      // Accept groups:, group_count:, groupsCount:
+      const fromProps = this._parseIntPos(P.groups) ??
+                        this._parseIntPos(P.group_count) ??
+                        this._parseIntPos(P.groupsCount);
+      if (fromProps) return fromProps;
+      // Fallback to data- attributes if you ever want DOM config
+      if (root) {
+        const ds = root.dataset || {};
+        const fromDom = this._parseIntPos(ds.groups) ??
+                        this._parseIntPos(ds.groupCount) ??
+                        this._parseIntPos(root.getAttribute('data-groups'));
+        if (fromDom) return fromDom;
+      }
+      return null;
+    },
+    _escape(s) {
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    },
+    _mountGroupRoulette(root) {
+      // --- Top controls (reuse .rr-controls style) ---
+      let controls = root.querySelector('.rr-controls');
+      if (!controls) {
+        controls = document.createElement('div');
+        controls.className = 'rr-controls';
+        controls.innerHTML = `
+          <label>Groups: <input type="number" min="1" step="1" value="4" id="gr-count"></label>
+          <span class="rr-sep">|</span>
+          <label>Seed: <input type="text" placeholder="optional" id="gr-seed"></label>
+          <span class="rr-sep">|</span>
+          <button type="button" class="rr-btn" id="gr-go">Group!</button>
+        `;
+        root.appendChild(controls);
+      }
+
+      // Prefill from slide header (optional)
+      const countInput = controls.querySelector('#gr-count');
+      const headerGroups = this._getHeaderGroups(root);
+      if (Number.isFinite(headerGroups) && headerGroups > 0) {
+        countInput.value = String(headerGroups);
+      }
+      const seedInput = controls.querySelector('#gr-seed');
+      const P = this._currentSlideProps || {};
+      if (seedInput && typeof P.seed === 'string' && P.seed.trim()) {
+        seedInput.value = P.seed.trim();
+      }
+
+      // --- Groups grid: prefer placing it inside the first .boxed-content ---
+      const container = root.querySelector('.boxed-content') || root;
+      let grid = container.querySelector('.gr-overlay');
+      if (!grid) {
+        grid = document.createElement('div');
+        // If we’re inside .boxed-content, render the grid in-flow
+        grid.className = 'gr-overlay' + (container !== root ? ' in-box' : '');
+        container.appendChild(grid);    // append after the last child
+      } else {
+        grid.innerHTML = '';
+      }
+
+      // Click handler to (re)group
+      const btn = controls.querySelector('#gr-go');
+      const clickHandler = () => this._groupify(root);
+      btn.addEventListener('click', clickHandler);
+
+      // Keep references for teardown
+      this._grpActive = { root, btn, clickHandler, grid };
+    },
+
+    _groupify(root) {
+      const attendees = Array.isArray(this.state.attendees) ? this.state.attendees.slice() : [];
+      const grid = root.querySelector('.gr-overlay');
+
+      if (!attendees.length) {
+        grid.innerHTML = `
+          <div class="gr-group">
+            <div class="gr-title">No attendees configured</div>
+            <div class="gr-empty">Add names on the roster slide (class: roulette-config)</div>
+          </div>`;
+        return;
+      }
+
+      const countInput  = root.querySelector('#gr-count');
+      const seedInput   = root.querySelector('#gr-seed');
+      let k = this._parseIntPos(countInput && countInput.value) || 4;
+      k = Math.max(1, k);
+
+      const seed = (seedInput && seedInput.value || '').trim();
+      const shuffled = seededShuffle(attendees, seed ? `GROUPS|${seed}|${k}` : `GROUPS|${Date.now()}`);
+
+      // Partition into k nearly equal groups (first groups get the +1 remainder)
+      const n = shuffled.length;
+      const base = Math.floor(n / k), extra = n % k;
+      const groups = [];
+      let idx = 0;
+      for (let i = 0; i < k; i++) {
+        const size = base + (i < extra ? 1 : 0);
+        groups.push(shuffled.slice(idx, idx + size));
+        idx += size;
+      }
+
+      this._renderGroups(grid, groups);
+    },
+
+    _renderGroups(grid, groups) {
+      grid.innerHTML = '';
+      groups.forEach((names, i) => {
+        const card = document.createElement('div');
+        card.className = 'gr-group';
+        const title = `Group ${i + 1} (${names.length})`;
+        if (!names.length) {
+          card.innerHTML = `<div class="gr-title">${title}</div><div class="gr-empty">—</div>`;
+        } else {
+          const lis = names.map(n => `<li>${this._escape(n)}</li>`).join('');
+          card.innerHTML = `<div class="gr-title">${title}</div><ul class="gr-list">${lis}</ul>`;
+        }
+        grid.appendChild(card);
+      });
+    },
+
+    _teardownGroupRoulette() {
+      const A = this._grpActive;
+      const root = A ? A.root : null;
+      if (A && A.btn && A.clickHandler) {
+        try { A.btn.removeEventListener('click', A.clickHandler); } catch(_) {}
+      }
+      if (root) {
+        const grid = root.querySelector('.gr-overlay');
+        if (grid) grid.innerHTML = '';
+      }
+      this._grpActive = null;
+    },
+
+
   };
 
   // expose
