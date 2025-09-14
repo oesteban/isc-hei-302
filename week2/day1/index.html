@@ -81,9 +81,24 @@ class: roulette-config
               spellcheck="false"
               class="notranslate"
               style="white-space: pre-wrap; min-height: 240px; padding: .5rem; border: 1px solid #ccc; border-radius: 6px;"><!--
--->Ada Lovelace
-Grace Hopper
-Alan Turing
+-->Amina El-Sayed
+Amir Haddad
+Chiamaka Okafor
+Ayodeji Adeyemi
+Selamawit Tesfaye
+Zhihao Chen
+Thảo Nguyễn
+Arjun Singh
+Sofía Álvarez
+Dmitry Volkov
+Agnieszka Nowak
+João Pereira
+Leilani Kealoha
+Diego Quispe
+Yael Levi
+Tāne Rangi
+Zehra Yılmaz
+Ethan Johnson
 </div>
   <div class="rr-col">
     <label>Organizers (one per line)</label>
@@ -144,46 +159,45 @@ layout: true
 # Objectives
 
 .boxed-content.larger.no-bullet[
-* .large[<i class="fa-solid fa-circle-right"></i> Explain **data transformations**]
-  <br /> .indent[.gray-text[and identify/create examples]]
+* .large[<i class="fa-solid fa-circle-right"></i> Convert a DAG sketch into a data pipeline specification]
+  <br /> .indent[.gray-text[applying *Apache Airflow* as first option]]
   <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Recognize how **tasks depend on one another**]
-  <br /> .indent[.gray-text[without feedback loops, contrast pipelines vs. representations of the internal flow of tasks]]
+* .large[<i class="fa-solid fa-circle-right"></i> Name *Apache Airflow*'s alternatives]
+  <br /> .indent[.gray-text[list differences between the Common Workflow Language, Nextflow, and Airflow]]
   <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Apply **DAGs** to represent pipelines]
-  <br /> .indent[.gray-text[correctly encoding tasks and dependencies, and understand pipeline nesting/flattening]]
+* .large[<i class="fa-solid fa-circle-right"></i> Deploy *Apache Airflow* on a laptop with *Docker*]
+  <br /> .indent[.gray-text[reinforcing the first steps with *Docker compose* from the previous session]]
   <br />
-* .large[<i class="fa-solid fa-circle-right"></i> **ETL vs. ELT**, **warehouse/mart vs. lake**.]
+* .large[<i class="fa-solid fa-circle-right"></i> Recognize *Apache Airflow*'s main components]
+  <br /> .indent.gray-text[create the a *hello world* pipeline with `BashOperator` and `PythonOperator`]
   <br />
+* .large[<i class="fa-solid fa-circle-right"></i> Build, orchestrate, and execute the pipeline of Day 1]
+  <br /> .indent.gray-text[Exercise monitoring, logging, and benchmarking]
   <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Describe the notion of **scaling** and **resource limitations**]
-  <br /> .indent[.gray-text[e.g., laptop vs. HPC]]
-  <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Establish a functional **Docker environment**.]
-  <br /> .indent[.gray-text[Execute processing tasks on a laptop given a Docker environment with a prepared Jupyter notebook.]]
+
 ]
 
 ---
 
-# Schedule
-
 .boxed-content.program-table[
 | Time | Content |
 |:--:|:--|
-| 9h20 | Quick quiz (**not graded**). |
-| 9h40 | Explaining a pipeline (**intro**). |
-| 9h50 | .gray-text[Break] |
-| 10h10 | **Roulette**: Explaining a pipeline (game). |
-| 10h40 | **Class**: from the pipeline to DAGs. |
-| 11h15 | **Guided tutorial**: Docker primer |
+| 8h15 | Quick quiz (**not graded**). |
+| 8h35 | **Roulette**: What do you expect from a pipeline framework/engine? |
+| 9h05 | .gray-text[Break] |
+| 9h15 | **Class**: *Apache Airflow* introduction |
+| 10h05 | .gray-text[Short break] |
+| 10h15 | **Tutorial**: A *Hello World!* pipeline with Airflow |
 | 11h45 | .gray-text[Lunch break] |
 | | |
-| 12h45 | **Lab**: brain pipeline |
-| 15h20 | Quick quiz (repetition) |
-| 15h35 | Discussion of quiz & **outlook** for next session |
+| 12h45 | **Group use-case**: neuro-302 with Airflow and Docker compose |
+| 15h00 | Quick quiz (repetition) |
+| 15h20 | Discussion of quiz |
+| 15h30 | Preparation of next session (groups, and flipped class lectures) |
 | 15h50 | Voluntary time |
 | 16h10 | .gray-text[End] |
 ]
+
 
 ---
 
@@ -202,12 +216,432 @@ layout: true
 ]
 
 ---
+class: roulette
+time: 45
+
+.section-mark[
+# Roulette
+
+.large[What do you expect from a pipeline framework/engine?]
+]
+
+???
+
+A contrarian view: https://www.youtube.com/watch?v=YQ056EKzCyw
+
+---
+
+.section-mark[
+# Apache Airflow
+
+.large[First overview]
+]
+
+---
+
+# Objectives (for this intro)
+
+.boxed-content.larger.no-bullet[
+* .large[<i class="fa-solid fa-circle-right"></i> Understand **what problems** pipeline engines like *Airflow* solve]
+  <br /> .indent[.gray-text[repeatable orchestration, dependencies, scheduling, monitoring]]
+  <br />
+* .large[<i class="fa-solid fa-circle-right"></i> Name *Airflow* **components** and **core concepts**]
+  <br /> .indent[.gray-text[DAG, task, operator, scheduler, webserver, executor, metadata DB]]
+  <br />
+* .large[<i class="fa-solid fa-circle-right"></i> Explain **scheduling semantics**]
+  <br /> .indent[.gray-text[start date & schedule, logical date, catchup/backfill, retries]]
+  <br />
+* .large[<i class="fa-solid fa-circle-right"></i> Read the **UI** (Graph/Grid) and **logs** to debug runs]
+  <br />
+* .large[<i class="fa-solid fa-circle-right"></i> Be ready for the hands‑ons:]
+  <br /> .indent[.gray-text[BashOperator & PythonOperator today; DockerOperator after lunch]]
+]
+
+---
+
+# Why Airflow? (the orchestration problem)
+
+.boxed-content[
+- You have **multiple steps** that transform data; each depends on prior results.
+- You need **repeatable, scheduled** runs (daily/weekly/cron/on‑demand).
+- You want **visibility**: status, retries, alerts, logs, timing, lineage.
+- You deploy on **machines/containers**; tasks may run **in parallel**.
+]
+
+.gray-text.small[Airflow focuses on *orchestration* (when/what/where), not the analytics themselves.]
+
+???
+Key idea: instead of humans running scripts in ad‑hoc order, Airflow coordinates tasks, enforces dependencies, and records outcomes & timings.
+
+---
+
+# Architecture at 10,000 ft
+
+.boxed-content.no-bullet[
+* .large[**Webserver** — UI (Graph/Grid view), trigger runs, browse logs]
+* .large[**Scheduler** — decides *what* to run *when*; queues tasks]
+* .large[**Executor** — *how* tasks are executed (Local/Celery)]
+* .large[**Workers** — where tasks actually run (processes/containers)]
+* .large[**Metadata DB** — persistent state (DAGs, runs, tasks, logs paths)]
+]
+
+.gray-text.small[In our Compose stack (official quick‑start): Postgres + Redis (Celery), webserver, scheduler, worker, flower.]
+
+---
+
+# Core concepts & glossary
+
+.boxed-content.no-bullet[
+* .large[**DAG** — a Directed Acyclic Graph of **tasks** (your pipeline)]
+* .large[**Task** — one node in the DAG; an **Operator** creates tasks]
+* .large[**Operator** — wrapper to run a kind of work (Bash/Python/**Docker**/…)]
+* .large[**Task Instance** — a task on a particular **run (logical date)**]
+* .large[**Run** — a DAG execution for a given **data interval / logical date**]
+]
+
+.gray-text.small[We’ll create a tiny DAG next session, then add Dockerized tasks after lunch.]
+
+---
+
+# DAG authoring (mental model)
+
+.boxed-content[
+.small[
+```python
+from airflow import DAG
+from airflow.operators.bash import BashOperator
+from datetime import datetime
+
+with DAG(
+    dag_id="example",
+    start_date=datetime(2025,1,1),
+    schedule_interval=None,  # on-demand first; schedule later
+    catchup=False,
+) as dag:
+    a = BashOperator(task_id="a", bash_command="echo A")
+    b = BashOperator(task_id="b", bash_command="echo B")
+    a >> b   # dependency: A must finish before B starts
+```
+]
+]
+
+.gray-text.small[Use the bitshift operators `>>` and `<<` to declare dependencies.]
+
+---
+
+# Scheduling: start date, schedule, logical date
+
+.boxed-content[
+- **start_date**: when the DAG *begins* to be eligible for scheduling.
+- **schedule_interval**: how often (cron preset like `@daily`, `@hourly`, or cron).
+- **Logical date** (a.k.a. execution date): label for the **data interval** the run represents.
+- **catchup**: if `True`, scheduler will create **past** runs since `start_date`.
+]
+
+.small[
+**Rule of thumb**: for `@daily`, the run labeled `2025‑01‑02` represents data **from** `2025‑01‑01 00:00** to **2025‑01‑02 00:00**.]
+]
+
+---
+
+# Catchup & backfill (visual)
+
+.boxed-content.small[
+```
+start_date = 2025-01-01, schedule = @daily, catchup=True
+Days:        01  02  03  04  05  06  07
+Runs made:  [01][02][03][04][05][06][07]   <- first scheduler start will enqueue all past logical dates
+```
+Turn **catchup=False** to avoid backfilling past dates (great for demos).
+]
+
+---
+
+# Retries, SLAs, timeouts (quick tour)
+
+.boxed-content[
+- **retries / retry_delay**: automatic reruns on failure.
+- **execution_timeout / timeout**: abort long‑running tasks.
+- **SLA**: receive alert if a task exceeds expected duration.
+- **depends_on_past**: force task to wait for **previous run’s** success.
+]
+
+.gray-text.small[We’ll set a simple `retries=1` in today’s hands‑on.]
+
+---
+
+# Operators we’ll use today
+
+.boxed-content.no-bullet[
+* .large[**BashOperator** — run shell commands (e.g., `date`, `sleep`)]
+* .large[**PythonOperator** — run a Python callable]
+* .large[**DockerOperator** (after lunch) — launch a container to do work]
+]
+
+.gray-text.small[Airflow has many more via **providers** (e.g., SQL, cloud, filesystems).]
+
+---
+
+# Jinja templating (power feature)
+
+.boxed-content[
+- You can use template variables in operator fields (e.g., `bash_command`).
+- Examples: `{{ ds }}`, `{{ ts }}`, `{{ dag_run.run_id }}`, `{{ task.task_id }}`.
+.small[
+```bash
+echo "Run on {{ ds }}"; echo "Task: {{ task.task_id }}"; echo "Try {{ try_number }}"
+```
+]
+]
+
+.gray-text.small[We’ll see template values in the task logs during the hands‑on.]
+
+---
+
+# Passing data: XCom (tiny taste)
+
+.boxed-content.small[
+```python
+from airflow.operators.python import PythonOperator
+
+def produce(**ctx):
+    return "hello"
+
+def consume(**ctx):
+    ti = ctx["ti"]
+    print("Got:", ti.xcom_pull(task_ids="produce"))
+
+p = PythonOperator(task_id="produce", python_callable=produce)
+c = PythonOperator(task_id="consume", python_callable=consume, provide_context=True)
+p >> c
+```
+]
+
+.gray-text.small[Useful sparingly; for larger data, persist to files/objects and pass **references**.]
+
+---
+
+# Airflow UI walkthrough (what to look at)
+
+.boxed-content[
+- **DAGs list**: toggle, trigger, view recent runs
+- **Graph view**: topology & status by task
+- **Grid view**: runs × tasks (good for patterns & retries)
+- **Task instance logs**: stdout/stderr, templates resolved
+- **Gantt / Duration**: where time is spent
+]
+
+---
+
+# Good DAG hygiene (for this course)
+
+.boxed-content.no-bullet[
+* .large[Keep tasks **small & deterministic**; idempotent if possible]
+* .large[Prefer **explicit dependencies** (`a >> b`) to hidden coupling]
+* .large[Use **parameters** and **env vars** instead of hard‑coding paths]
+* .large[Log **inputs/outputs**; keep an eye on **latency**]
+]
+
+.gray-text.small[These habits will pay off when we move to DockerOperator.]
+
+---
+
+# Today’s flow (how this connects)
+
+.boxed-content[
+1) **Hello World hands‑on** (10h15): bring up stack, create a DAG with **BashOperator** → **PythonOperator**, inspect UI & logs.  
+2) **After lunch** (12h45): extend stack to support **DockerOperator**, run a neuroimaging step in a container and persist outputs.
+]
+
+---
+
+# Checklist before the hands‑on
+
+.boxed-content.no-bullet[
+* .large[Installed: **Docker Desktop/Engine** running]
+* .large[System: **~4 GB** free RAM; ports **8080** free or change mapping]
+* .large[Shell: can run `curl`, `docker-compose`]
+]
+
+.gray-text.small[We’ll do the exact commands on the next tutorial slide deck.]
+
+---
+
+.section-mark[
+# Q&A (2–3 min)
+
+.large[Then we jump into the hands‑on: *Hello World!*
+]
+]
+
+
+---
 
 .section-mark[
 # Short break
 
 .large[We reconvene .timer[in 10 minutes].]
 ]
+
+---
+count: false
+
+# Step 1 — Get the official Compose stack
+
+.boxed-content[
+```bash
+# In a new, empty directory
+curl -LfO 'https://airflow.apache.org/docs/apache-airflow/2.0.2/docker-compose.yaml'
+
+# Bind-mount folders Airflow expects
+mkdir -p ./dags ./logs ./plugins
+
+# (Linux) Make host UID/GID visible so logs are writable on the host
+echo -e "AIRFLOW_UID=$(id -u)\nAIRFLOW_GID=0" > .env
+
+# One-time DB & user init (user: airflow / pass: airflow)
+docker-compose up airflow-init
+
+# Start the stack (webserver, scheduler, worker, redis, postgres, flower)
+docker-compose up
+```
+]
+
+
+.gray-text.large[
+Keep this terminal running; use a second terminal for edits.
+
+Now, open **http://localhost:8080** and log in with `airflow / airflow`.  
+]
+
+---
+
+# Step 2 — First DAG with *BashOperator*
+
+.boxed-content.larger[
+Create `dags/hello_bash.py`. This is the beginning of the file:
+
+```python
+# Necessary imports
+from datetime import datetime
+from airflow import DAG
+from airflow.operators.bash import BashOperator
+
+# Let's use a context to define the DAG
+with DAG(
+    dag_id="hello_bash",
+    start_date=datetime(2025, 1, 1),
+    schedule_interval=None,   # run on-demand
+    catchup=False,
+    default_args={"owner": "302"},
+    description="Minimal BashOperator demo",
+) as dag:
+```
+]
+
+---
+count: false
+
+# Step 2 — First DAG with *BashOperator*
+
+.boxed-content[
+Now we create three tasks, which just call Bash command lines:
+
+```Python
+    print_date = BashOperator(
+        task_id="print_date",
+        bash_command="date"
+    )
+
+    sleep_a_bit = BashOperator(
+        task_id="sleep_a_bit",
+        bash_command="sleep 5",
+        retries=1
+    )
+
+    templated = BashOperator(
+        task_id="templated",
+        bash_command="""\
+echo "Run on {{ ds }}";
+echo "Task: {{ task.task_id }}";
+echo "Try {{ try_number }}";
+"""
+    )
+```
+]
+
+---
+count: false
+
+# Step 2 — First DAG with *BashOperator*
+
+.boxed-content.large[
+And, this is the key step: **define the dependencies**.
+In this case, both `sleep_a_bit` and `templated` depend on `print_date`:
+
+.larger[
+```Python
+    # ... last lines of the 'templated' BashOperator
+
+    print_date >> [sleep_a_bit, templated]
+```
+]
+]
+
+
+---
+
+# Step 3 — Add a *PythonOperator*
+
+.boxed-content.larger[
+Append to `dags/hello_bash.py`:
+```Python
+from airflow.operators.python import PythonOperator
+
+def summarize():
+    import platform, os
+    print("Hello from PythonOperator!")
+    print("Python:", platform.python_version())
+    print("CWD:", os.getcwd())
+
+py_task = PythonOperator(
+    task_id="py_task",
+    python_callable=summarize
+)
+
+# Make it run after 'sleep_a_bit'
+sleep_a_bit >> py_task
+```
+
+Trigger again and check the **py_task** logs.
+]
+
+---
+
+# Troubleshooting (quick)
+
+.boxed-content.large[
+- **Port 8080 busy?** Change mapping in `docker-compose.yaml` (e.g., `8081:8080`)
+- **No DAG visible?** Confirm file is under `./dags/` and watch webserver logs
+- **Stale state?** `docker-compose down -v` then re‑`airflow-init` (only if needed)
+]
+
+---
+class: group-roulette
+groups: 5
+seed: 22.09.2025
+
+<br />
+
+# **Group investigation**
+
+.boxed-content[
+<p style="padding: 20px 0 20px;">
+.text-gray.large[Deploy *Apache Airflow* and create your first DAG]
+</p>
+]
+
+???
 
 ---
 
@@ -219,11 +653,240 @@ layout: true
 
 ---
 
+# Goal (after lunch)
+
+.boxed-content[
+- Extend the **official Airflow 2.0.2** stack with the **Docker provider**
+- Allow tasks to start sibling containers via the **Docker socket**
+- Create a DAG that runs **`oesteban/neuropipeline-302`** and **persists outputs** to the host
+]
+
+---
+
+# Step A — Minimal Airflow image (add Docker provider)
+
+.boxed-content[
+Create a `Dockerfile` next to `docker-compose.yaml`:
+.small[
+```dockerfile
+FROM apache/airflow:2.0.2-python3.8
+
+USER root
+# Provider compatible with Airflow 2.0.x; Python Docker SDK for operator
+RUN pip install --no-cache-dir \
+      "apache-airflow-providers-docker==1.0.1" \
+      "docker~=3.0"
+USER airflow
+```
+]
+]
+
+---
+
+# Step B — Patch Compose (build + socket mount)
+
+.boxed-content.small[
+Edit `docker-compose.yaml`. If it defines a common anchor like `x-airflow-common`, change there; otherwise apply to **webserver**, **scheduler**, and **worker**:
+
+```yaml
+# Replace image: with a local build and mount the Docker socket
+x-airflow-common: &airflow-common
+  # image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.0.2}
+  build: .
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./plugins:/opt/airflow/plugins
+    - /var/run/docker.sock:/var/run/docker.sock   # enable DockerOperator
+```
+
+Then:
+```bash
+docker-compose build
+docker-compose up -d   # (run airflow-init again only if needed)
+```
+]
+
+---
+
+# Step C — Prepare a home for job containers
+
+.boxed-content[
+.small[
+```bash
+mkdir -p neuro-home/{work,data,outputs}
+# We'll mount this as /home/databot in each job container
+```
+]
+]
+
+---
+
+# Step D — DAG using *DockerOperator*
+
+.boxed-content[
+Create `dags/neuro_docker.py`:
+.small[
+```python
+from datetime import datetime
+import os
+from airflow import DAG
+from airflow.providers.docker.operators.docker import DockerOperator
+
+NEURO_HOME = os.environ.get("NEURO_HOME", os.path.abspath("neuro-home"))
+HOST_UID = os.environ.get("HOST_UID", "1000")
+HOST_GID = os.environ.get("HOST_GID", "1000")
+USER_MAP = f"{HOST_UID}:{HOST_GID}"
+
+IN_T1  = "/home/databot/data/ds000005/sub-01/anat/sub-01_T1w.nii.gz"
+OUT_BM = "/home/databot/outputs/sub-01_T1w_brain.nii.gz"
+
+with DAG(
+    dag_id="neuro_skullstrip",
+    start_date=datetime(2025, 1, 1),
+    schedule_interval=None,
+    catchup=False,
+    description="Skull-strip using oesteban/neuropipeline-302",
+) as dag:
+
+    ensure_dataset = DockerOperator(
+        task_id="ensure_dataset",
+        image="oesteban/neuropipeline-302",
+        docker_url="unix://var/run/docker.sock",
+        api_version="auto",
+        auto_remove=True,
+        mount_tmp_dir=False,
+        user=USER_MAP,
+        command=f'''
+          bash -lc 'set -e;
+            test -f "{IN_T1}" || (
+              mkdir -p /home/databot/data &&
+              datalad clone https://github.com/OpenNeuroDatasets/ds000005 /home/databot/data/ds000005 &&
+              datalad get -d /home/databot/data/ds000005 {IN_T1}
+            )'
+        ''',
+        volumes=[f"{NEURO_HOME}:/home/databot"],
+    )
+
+    skullstrip = DockerOperator(
+        task_id="skullstrip",
+        image="oesteban/neuropipeline-302",
+        docker_url="unix://var/run/docker.sock",
+        api_version="auto",
+        auto_remove=True,
+        mount_tmp_dir=False,
+        user=USER_MAP,
+        command=f'3dSkullStrip -input {IN_T1} -prefix {OUT_BM}',
+        volumes=[f"{NEURO_HOME}:/home/databot"],
+    )
+
+    ensure_dataset >> skullstrip
+```
+]
+]
+
+---
+
+# Step E — Pass host vars to Airflow (optional but handy)
+
+.boxed-content.small[
+Append to `.env` (same folder as `docker-compose.yaml`):
+
+```bash
+HOST_UID=$(id -u)
+HOST_GID=$(id -g)
+NEURO_HOME=/absolute/path/to/neuro-home   # change to your path
+```
+
+In `docker-compose.yaml`, under the Airflow services (or the common anchor):
+
+```yaml
+environment:
+  - HOST_UID=${HOST_UID}
+  - HOST_GID=${HOST_GID}
+  - NEURO_HOME=${NEURO_HOME}
+```
+]
+
+---
+
+# Run the DAG & verify outputs
+
+.boxed-content[
+- In UI: enable **neuro_skullstrip** → **Trigger**
+- Check logs: a short‑lived job container runs AFNI’s `3dSkullStrip`
+- Verify host file: `neuro-home/outputs/sub-01_T1w_brain.nii.gz`
+]
+
+---
+
+# Notes & gotchas (classroom)
+
+.boxed-content.small[
+- **Socket mount** gives the worker access to the host Docker daemon (OK on dev laptops; not for multi‑tenant prod).
+- **Permissions**: mapping `user=UID:GID` keeps outputs owned by the student on the host.
+- **Port conflicts**: change `8080:8080` if needed.
+- **Apple Silicon**: if necessary, add `platform="linux/amd64"` to the operator params.
+]
+
+---
+
+.section-mark[
+# Group time
+
+.large[
+Form teams, implement the DAG, and produce outputs.  
+Demos in ~2 hours: 7–8 minutes per team.
+]
+]
+
+
+---
+
 .section-mark[
 # Quick quiz (repeat)
 
 .large[20 minutes, not graded]
 ]
+
+---
+class: roulette
+time: 15
+
+# Flipped-class topics
+
+.boxed-content[
+
+* Pipelines and Airflow:
+  1. Handling task failures on Airflow, task retry, logging and exception handling, slack notifications.
+  1. Airflow's DAGRun operator, BranchPython operator, and XCom (control flow + passing data between tasks).
+  1. ETL vs. ELT and the warehouse/lake/lakehouse triad (architectures, pros/cons, common tools).
+  1. Data formats for pipelines: CSV/JSON vs. Parquet/Avro/ORC (schema evolution, compression, interoperability).
+  1. DAG design patterns: idempotency, atomic writes, backfills, and critical-path/latency budgeting.
+  1. Observability for pipelines: metrics (counters/gauges/timers), structured logs, basic tracing (what to measure and why).
+  1. Data lineage & provenance: capturing run metadata and artifacts (concepts; OpenLineage, DVC/DataLad at a glance).
+  1. Pipeline frameworks: Airflow vs. Dagster vs. Prefect vs. Nextflow vs. CWL (when to choose what).
+  1. Creating DAGs and tasks with Python decorators.
+
+* Docker:
+  1. Docker Compose pattern: “controller + job containers” (launch AFNI jobs from a Jupyter service via Docker SDK).
+  1. Multi-stage Docker builds & image slimming: measure size, cache hits, and reproducibility tips.
+  1. Containers vs. VMs in practice: isolation, performance, and when to choose which (mini benchmark or case study).
+  1. Volumes, user mapping, and permissions: reproducible outputs across host/container (UID/GID pitfalls & fixes).
+  1. Container security basics: rootless containers, dropping capabilities, seccomp, read‑only rootfs (harden a sample image).
+
+* Spark
+  1. Spark fundamentals: narrow vs. wide transformations, shuffles, and partitioning (tiny wordcount + timing).
+  1. Spark I/O and file layout: partitioning strategies, small-files problem, and choosing Parquet/ORC effectively.
+
+* Streaming processing & Kafka
+  1. Deploy Kafka locally using Docker Compose. Explore broker logs and topic creation.
+  1. Compare Kafka with other streaming frameworks (Pulsar, Flink, Kinesis). Focus on design trade-offs and ecosystems.
+  1. Streaming architectures: batch vs. stream vs. micro‑batch; Lambda vs. Kappa; event‑time vs. processing‑time, watermarks & windows.
+
+]
+
+
 
 ---
 
