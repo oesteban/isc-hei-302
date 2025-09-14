@@ -414,11 +414,23 @@ a {
 }
 
 .larger {
-    font-size: 1.1em;
+    font-size: 1.2em;
 }
 
 .large {
     font-size: 1.6em;
+}
+
+.huge {
+    font-size: 2.0em;
+}
+
+.larger code {
+    font-size: 16pt;
+}
+
+.large code {
+    font-size: 18pt;
 }
 
 .boxed-content {
