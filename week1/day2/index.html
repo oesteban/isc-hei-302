@@ -158,7 +158,7 @@ layout: true
 
 # Objectives
 
-.boxed-content.larger.no-bullet[
+.boxed-content.no-bullet[
 * .larger[<i class="fa-solid fa-circle-right"></i> Solve problems with  **containers**]
   <br /> .indent[.gray-text[and describe the differences with virtual machines]]
   <br />
@@ -275,7 +275,7 @@ Examples of why:
 
 # What's Docker?
 
-.boxed-content.larger[
+.boxed-content[
 > Docker is a set of [platform as a service](https://en.wikipedia.org/wiki/Platform_as_a_service) (PaaS) products that use [OS-level virtualization](https://en.wikipedia.org/wiki/OS-level_virtualization) to deliver software in packages called [containers](https://en.wikipedia.org/wiki/Container_%28virtualization%29).
 > <br />
 > <br />
@@ -295,7 +295,7 @@ count:false
 
 # What's Docker?
 
-.boxed-content.larger[
+.boxed-content[
 > Docker is a set of [platform as a service](https://en.wikipedia.org/wiki/Platform_as_a_service) (PaaS) products that use [OS-level virtualization](https://en.wikipedia.org/wiki/OS-level_virtualization) to deliver software in packages called [containers](https://en.wikipedia.org/wiki/Container_%28virtualization%29).
 > <br />
 > <br />
@@ -485,6 +485,7 @@ images.
 
 # Demystifying multi-stage builds: neuroimaging image
 
+.boxed-content[
 First image, the `downloader`:
 
 ```Dockerfile
@@ -509,6 +510,7 @@ RUN apt-get update && \
                     unzip && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 ```
+]
 
 ---
 count: false
@@ -719,7 +721,6 @@ mkdir -p work outputs
 docker run --rm -it -p 8888:8888 \
   -v "$PWD/work":/home/databot/work \
   -v "$PWD/outputs":/home/databot/outputs \
-  -u $(id -u):$(id -g) \
   --name neuro302 \
   oesteban/neuropipeline-302
 ```
