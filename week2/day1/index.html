@@ -227,7 +227,6 @@ time: 45
 
 ???
 
-A contrarian view: https://www.youtube.com/watch?v=YQ056EKzCyw
 
 ---
 
@@ -242,7 +241,7 @@ A contrarian view: https://www.youtube.com/watch?v=YQ056EKzCyw
 # Objectives (for this intro)
 
 .boxed-content.larger.no-bullet[
-* .large[<i class="fa-solid fa-circle-right"></i> Understand **what problems** pipeline engines like *Airflow* solve]
+* .large[<i class="fa-solid fa-circle-right"></i> Understand **what problems** *Airflow* solves]
   <br /> .indent[.gray-text[repeatable orchestration, dependencies, scheduling, monitoring]]
   <br />
 * .large[<i class="fa-solid fa-circle-right"></i> Name *Airflow* **components** and **core concepts**]
@@ -253,60 +252,113 @@ A contrarian view: https://www.youtube.com/watch?v=YQ056EKzCyw
   <br />
 * .large[<i class="fa-solid fa-circle-right"></i> Read the **UI** (Graph/Grid) and **logs** to debug runs]
   <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Be ready for the hands‑ons:]
+* .large[<i class="fa-solid fa-circle-right"></i> Be ready for the hands-ons:]
   <br /> .indent[.gray-text[BashOperator & PythonOperator today; DockerOperator after lunch]]
 ]
 
 ---
 
-# Why Airflow? (the orchestration problem)
+# Why Airflow?
 
-.boxed-content[
-- You have **multiple steps** that transform data; each depends on prior results.
-- You need **repeatable, scheduled** runs (daily/weekly/cron/on‑demand).
-- You want **visibility**: status, retries, alerts, logs, timing, lineage.
-- You deploy on **machines/containers**; tasks may run **in parallel**.
+.boxed-content.larger.no-bullet[
+* .large[<i class="fa-solid fa-circle-right"></i> You have a **pipeline**]
+  <br /> .gray-text.indent[You have **multiple steps** that transform data; each depends on prior results.]
+
+* .large[<i class="fa-solid fa-circle-right"></i> You need a powerful **scheduling** system]
+  <br /> .gray-text.indent[Contrarian view: *[Airflow is just cron on steroids](https://www.youtube.com/watch?v=YQ056EKzCyw)*.]
+
+* .large[<i class="fa-solid fa-circle-right"></i> You need easy access to **pipeline management**]
+  <br /> .gray-text.indent[A solid *service* to query status, retries, alerts, logs, timing, lineage.]
+
+* .large[<i class="fa-solid fa-circle-right"></i> You want pipeline **optimization**]
+  <br /> .gray-text.indent[Tools like *Airflow*'s Gantt chart make the critical path obvious.]
 ]
 
-.gray-text.small[Airflow focuses on *orchestration* (when/what/where), not the analytics themselves.]
+.gray-text.large[Airflow focuses on *orchestration* (when/what/where), not the analytics themselves.]
 
 ???
-Key idea: instead of humans running scripts in ad‑hoc order, Airflow coordinates tasks, enforces dependencies, and records outcomes & timings.
+Key idea: instead of humans running scripts in ad-hoc order,
+Airflow coordinates tasks, enforces dependencies, and records outcomes & timings.
 
 ---
 
-# Architecture at 10,000 ft
+# Airflow's jargon
+
+<br />
 
 .boxed-content.no-bullet[
-* .large[**Webserver** — UI (Graph/Grid view), trigger runs, browse logs]
-* .large[**Scheduler** — decides *what* to run *when*; queues tasks]
-* .large[**Executor** — *how* tasks are executed (Local/Celery)]
-* .large[**Workers** — where tasks actually run (processes/containers)]
-* .large[**Metadata DB** — persistent state (DAGs, runs, tasks, logs paths)]
+* .large[<i class="fa-solid fa-diagram-project"></i> **DAG** — name for pipelines in *Airflow*]
+  <br /> .indent.gray-text[In fact, you save them under a folder called `dags/`]
+  <br />
+* .large[<i class="fa-solid fa-list-check"></i> **Task** — one node in the DAG]
+  <br /> .indent.gray-text[Tasks are crated with **Operator**s]
+  <br />
+* .large[<i class="fa-solid fa-dharmachakra"></i> **Operator** — Python wrapper to run a kind of work]
+  <br /> .indent.gray-text[We'll work with Bash, Python and Docker operators]
+  <br />
+* .large[<i class="fa-solid fa-object-group"></i> **Task Instance** — A task after execution of the corresponding DAG]
+  <br />
+  <br />
+* .large[<i class="fa-solid fa-flag-checkered"></i> **Run** — a DAG execution]
 ]
 
-.gray-text.small[In our Compose stack (official quick‑start): Postgres + Redis (Celery), webserver, scheduler, worker, flower.]
 
 ---
 
-# Core concepts & glossary
+# Airflow's Components
+
+<br />
 
 .boxed-content.no-bullet[
-* .large[**DAG** — a Directed Acyclic Graph of **tasks** (your pipeline)]
-* .large[**Task** — one node in the DAG; an **Operator** creates tasks]
-* .large[**Operator** — wrapper to run a kind of work (Bash/Python/**Docker**/…)]
-* .large[**Task Instance** — a task on a particular **run (logical date)**]
-* .large[**Run** — a DAG execution for a given **data interval / logical date**]
+* .large[<i class="fa-solid fa-server"></i> **Webserver** — UI (Graph/Grid view), trigger runs, browse logs]
+  <br />
+  <br />
+* .large[<i class="fa-solid fa-calendar-days"></i> **Scheduler** — decides *what* to run *when*; queues tasks]
+  <br />
+  <br />
+* .large[<i class="fa-solid fa-clapperboard"></i> **Executor** — *how* tasks are executed]
+  <br />
+  <br />
+* .large[<i class="fa-solid fa-person-digging"></i> **Workers** — where tasks actually run (processes/containers)]
+  <br />
+  <br />
+* .large[<i class="fa-solid fa-database"></i> **Metadata DB** — persistent state (DAGs, runs, tasks, logs paths)]
+  <br />
+  <br />
 ]
-
-.gray-text.small[We’ll create a tiny DAG next session, then add Dockerized tasks after lunch.]
 
 ---
 
-# DAG authoring (mental model)
+# Single-machine/single-role deployment
+
+.boxed-content.center[
+<img src="https://airflow.apache.org/docs/apache-airflow/stable/_images/diagram_basic_airflow_architecture.png" style="width: 80%" />
+.center.small[
+From the [official *Airflow*'s documentation](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html#basic-airflow-deployment)
+]
+]
+
+???
+
+---
+
+# Cluster/cloud/multi-role deployment
+
+.boxed-content.center[
+<img src="https://airflow.apache.org/docs/apache-airflow/stable/_images/diagram_distributed_airflow_architecture.png" style="width: 82%" />
+.center.small[
+From the [official *Airflow*'s documentation](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html#basic-airflow-deployment)
+]
+]
+
+???
+
+---
+
+# First DAG
 
 .boxed-content[
-.small[
+.larger[
 ```python
 from airflow import DAG
 from airflow.operators.bash import BashOperator
@@ -320,12 +372,14 @@ with DAG(
 ) as dag:
     a = BashOperator(task_id="a", bash_command="echo A")
     b = BashOperator(task_id="b", bash_command="echo B")
-    a >> b   # dependency: A must finish before B starts
+    a >> b   # dependency: B requires A to finish first
 ```
 ]
 ]
 
-.gray-text.small[Use the bitshift operators `>>` and `<<` to declare dependencies.]
+.large[Bitshift operators (`>>`, `<<`) declare dependencies.]
+
+.large[`BashOperator` declares a task executed in *Bash*]
 
 ---
 
