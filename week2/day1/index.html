@@ -316,13 +316,13 @@ Airflow coordinates tasks, enforces dependencies, and records outcomes & timings
 * .large[<i class="fa-solid fa-calendar-days"></i> **Scheduler** — decides *what* to run *when*; queues tasks]
   <br />
   <br />
-* .large[<i class="fa-solid fa-clapperboard"></i> **Executor** — *how* tasks are executed]
-  <br />
-  <br />
 * .large[<i class="fa-solid fa-person-digging"></i> **Workers** — where tasks actually run (processes/containers)]
   <br />
   <br />
 * .large[<i class="fa-solid fa-database"></i> **Metadata DB** — persistent state (DAGs, runs, tasks, logs paths)]
+  <br />
+  <br />
+* .large[<i class="fa-solid fa-clapperboard"></i> **Executor** — submits tasks to workers]
   <br />
   <br />
 ]
@@ -383,20 +383,16 @@ with DAG(
 
 ---
 
-# Scheduling: start date, schedule, logical date
+# Scheduling
 
-.boxed-content[
+.boxed-content.large[
 - **start_date**: when the DAG *begins* to be eligible for scheduling.
-- **schedule_interval**: how often (cron preset like `@daily`, `@hourly`, or cron).
-- **Logical date** (a.k.a. execution date): label for the **data interval** the run represents.
-- **catchup**: if `True`, scheduler will create **past** runs since `start_date`.
+- **schedule_interval**: how often (cron preset like `@daily`, `@hourly`, or [cron](https://crontab.guru/)).
 ]
 
-.small[
-**Rule of thumb**: for `@daily`, the run labeled `2025‑01‑02` represents data **from** `2025‑01‑01 00:00** to **2025‑01‑02 00:00**.]
-]
+???
 
----
+<!--
 
 # Catchup & backfill (visual)
 
@@ -408,6 +404,7 @@ Runs made:  [01][02][03][04][05][06][07]   <- first scheduler start will enqueue
 ```
 Turn **catchup=False** to avoid backfilling past dates (great for demos).
 ]
+-->
 
 ---
 
@@ -415,12 +412,12 @@ Turn **catchup=False** to avoid backfilling past dates (great for demos).
 
 .boxed-content[
 - **retries / retry_delay**: automatic reruns on failure.
-- **execution_timeout / timeout**: abort long‑running tasks.
+- **execution_timeout / timeout**: abort long-running tasks.
 - **SLA**: receive alert if a task exceeds expected duration.
-- **depends_on_past**: force task to wait for **previous run’s** success.
+- **depends_on_past**: force task to wait for **previous run's** success.
 ]
 
-.gray-text.small[We’ll set a simple `retries=1` in today’s hands‑on.]
+.gray-text.small[We'll set a simple `retries=1` in today's hands-on.]
 
 ---
 
