@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="1920"
+   height="1080"
+   viewBox="0 0 508 285.75"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="shipment-weight-inkscape.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     units="px"
+     inkscape:zoom="0.32"
+     inkscape:cx="723.4375"
+     inkscape:cy="1059.375"
+     inkscape:window-width="1920"
+     inkscape:window-height="1029"
+     inkscape:window-x="1080"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g102741" />
+  <defs
+     id="defs2">
+    <style
+       type="text/css"
+       id="style150557"><![CDATA[
+     @import url(https://fonts.googleapis.com/css?family=Urbanist:400,800,400italic);
+     @import url(https://fonts.googleapis.com/css?family=Shadows+Into+Light:400);
+    ]]>
+    </style>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient61297">
+      <stop
+         style="stop-color:#dc0069;stop-opacity:1;"
+         offset="0"
+         id="stop61293" />
+      <stop
+         style="stop-color:#dc0069;stop-opacity:0;"
+         offset="1"
+         id="stop61295" />
+    </linearGradient>
+    <marker
+       style="overflow:visible;"
+       id="Arrow2Send"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Send"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.3) rotate(180) translate(-2.3,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="stroke:context-stroke;fill-rule:evenodd;fill:context-stroke;stroke-width:0.62500000;stroke-linejoin:round;"
+         id="path43151" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="Arrow2Mend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.6) rotate(180) translate(0,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="stroke:context-stroke;fill-rule:evenodd;fill:context-stroke;stroke-width:0.62500000;stroke-linejoin:round;"
+         id="path43145" />
+    </marker>
+    <marker
+       style="overflow:visible;"
+       id="Arrow2Lend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Lend"
+       inkscape:isstock="true">
+      <path
+         transform="scale(1.1) rotate(180) translate(1,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="stroke:context-stroke;fill-rule:evenodd;fill:context-stroke;stroke-width:0.62500000;stroke-linejoin:round;"
+         id="path43139" />
+    </marker>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient61297"
+       id="linearGradient61299"
+       x1="25.496265"
+       y1="252.85368"
+       x2="25.496265"
+       y2="36.398544"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Arrow"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <path
+       style="fill:#dc0069;fill-opacity:1;stroke:url(#linearGradient61299);stroke-width:8.965;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 37.099237,25.21333 V 261.88485"
+       id="path43116" />
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="-272.37302"
+       y="22.955856"
+       id="text66659"
+       inkscape:transform-center-x="-53.279506"
+       inkscape:transform-center-y="28.906126"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         id="tspan66657"
+         style="stroke-width:0.264583"
+         x="-272.37302"
+         y="22.955856">heavy</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;display:inline;stroke-width:0.264583"
+       x="-60.976467"
+       y="22.955856"
+       id="text66659-8"
+       inkscape:transform-center-x="-53.279506"
+       inkscape:transform-center-y="28.90613"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         id="tspan66657-4"
+         style="stroke-width:0.264583"
+         x="-60.976467"
+         y="22.955856">light</tspan></text>
+  </g>
+  <g
+     inkscape:label="Bare metal"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:Urbanist;font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="69.259392"
+       y="265.58578"
+       id="text6700"><tspan
+         sodipodi:role="line"
+         id="tspan6698"
+         style="font-weight:bold;font-size:25.4px;stroke-width:0.264583"
+         x="69.259392"
+         y="265.58578">'Bare metal'</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;display:inline;stroke-width:0.264583"
+       x="415.07169"
+       y="265.58578"
+       id="text71774"><tspan
+         sodipodi:role="line"
+         id="tspan71772"
+         style="stroke-width:0.264583"
+         x="415.07169"
+         y="265.58578">Laptop</tspan></text>
+  </g>
+  <g
+     inkscape:label="VMs 1"
+     inkscape:groupmode="layer"
+     id="g76850"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="69.068886"
+       y="224.65891"
+       id="text76840"><tspan
+         sodipodi:role="line"
+         id="tspan76838"
+         style="font-weight:bold;stroke-width:0.264583"
+         x="69.068886"
+         y="224.65891">Type 1 VMs</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="342.79623"
+       y="224.65891"
+       id="text82800"><tspan
+         sodipodi:role="line"
+         id="tspan82798"
+         style="stroke-width:0.264583"
+         x="342.79623"
+         y="224.65891">VMware ESXi</tspan></text>
+  </g>
+  <g
+     inkscape:label="VMs (all)"
+     inkscape:groupmode="layer"
+     id="g100787"
+     style="display:none"
+     sodipodi:insensitive="true">
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="69.068886"
+       y="205.60916"
+       id="text100781"><tspan
+         sodipodi:role="line"
+         id="tspan100779"
+         style="font-weight:bold;stroke-width:0.264583"
+         x="69.068886"
+         y="205.60916">Virtual Machines</tspan></text>
+  </g>
+  <g
+     inkscape:label="VMs 2"
+     inkscape:groupmode="layer"
+     id="g76960"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="69.068886"
+       y="187.54204"
+       id="text76938"><tspan
+         sodipodi:role="line"
+         id="tspan76936"
+         style="font-weight:bold;stroke-width:0.264583"
+         x="69.068886"
+         y="187.54204">Type 2 VMs</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="383.06799"
+       y="187.54204"
+       id="text86270"><tspan
+         sodipodi:role="line"
+         id="tspan86268"
+         style="stroke-width:0.264583"
+         x="383.06799"
+         y="187.54204">VirtualBox</tspan></text>
+  </g>
+  <g
+     inkscape:label="Linux containers"
+     inkscape:groupmode="layer"
+     id="g84184"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="69.068886"
+       y="153.73985"
+       id="text84174"><tspan
+         sodipodi:role="line"
+         id="tspan84172"
+         style="font-weight:bold;stroke-width:0.264583"
+         x="69.068886"
+         y="153.73985">OS-level containers</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="448.11707"
+       y="153.73985"
+       id="text90096"><tspan
+         sodipodi:role="line"
+         id="tspan90094"
+         style="stroke-width:0.264583"
+         x="448.11707"
+         y="153.73985">LXC</tspan></text>
+  </g>
+  <g
+     inkscape:label="Containers (all)"
+     inkscape:groupmode="layer"
+     id="g102741"
+     style="display:none"
+     sodipodi:insensitive="true">
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="69.068886"
+       y="133.63179"
+       id="text102735"><tspan
+         sodipodi:role="line"
+         id="tspan102733"
+         style="font-weight:bold;stroke-width:0.264583"
+         x="69.068886"
+         y="133.63179">Containers</tspan></text>
+  </g>
+  <g
+     inkscape:label="Docker containers"
+     inkscape:groupmode="layer"
+     id="g87966"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="69.068886"
+       y="112.81299"
+       id="text87952"><tspan
+         sodipodi:role="line"
+         id="tspan87950"
+         style="font-weight:bold;stroke-width:0.264583"
+         x="69.068886"
+         y="112.81299">App-centric containers</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="415.18607"
+       y="112.81299"
+       id="text91828"><tspan
+         sodipodi:role="line"
+         id="tspan91826"
+         style="stroke-width:0.264583"
+         x="415.18607"
+         y="112.81299">Docker</tspan></text>
+  </g>
+  <g
+     inkscape:label="Snap"
+     inkscape:groupmode="layer"
+     id="g91040"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="69.068886"
+       y="75.531006"
+       id="text91034"><tspan
+         sodipodi:role="line"
+         id="tspan91032"
+         style="font-weight:bold;stroke-width:0.264583"
+         x="69.068886"
+         y="75.531006">App containers</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="348.79053"
+       y="75.531006"
+       id="text94721"><tspan
+         sodipodi:role="line"
+         id="tspan94719"
+         style="stroke-width:0.264583"
+         x="348.79053"
+         y="75.531006">Ubuntu Snap</tspan></text>
+  </g>
+  <g
+     inkscape:label="Aptitude"
+     inkscape:groupmode="layer"
+     id="g92855"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="68.56089"
+       y="38.884029"
+       id="text92853"><tspan
+         sodipodi:role="line"
+         id="tspan92851"
+         style="font-weight:bold;stroke-width:0.264583"
+         x="68.56089"
+         y="38.884029">Package containers</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:25.4px;line-height:1.25;font-family:Urbanist;-inkscape-font-specification:'Urbanist, Normal';font-variant-ligatures:none;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;stroke-width:0.264583"
+       x="313.20685"
+       y="38.884029"
+       id="text98669"><tspan
+         sodipodi:role="line"
+         id="tspan98667"
+         style="stroke-width:0.264583"
+         x="313.20685"
+         y="38.884029">Ubuntu aptitude</tspan></text>
+  </g>
+</svg>

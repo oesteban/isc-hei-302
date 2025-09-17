@@ -36,89 +36,8 @@
 name: title
 layout: true
 class: cover
----
-count: false
-
-
-.section-mark.center[
-<a href="https://oesteban.github.io/isc-hei-302/week1/day2/index.html">
-  <object type="image/svg+xml" data="images/qr-talk-url.svg" style="width: 20%"></object>
-  <br />
-  https://oesteban.github.io/isc-hei-302/week1/day2/index.html
-</a>
-
-<br />
-<br />
-
-## DevOps and Docker
-
-Oscar Esteban &lt;<code>oscar.esteban@hevs.ch</code>>
-
-<br />
-
-### 302 Data computation (week 1, day 2) — 18.09.2025
-]
-
-???
 
 ---
-class: roulette-config
-
-.roulette-roster[
-# Class roster (for roulettes)
-
-<div class="rr-config-wrap">
-  <div class="rr-col">
-    <label>Attendees (one per line)</label>
-    <div contenteditable="true"
-              role="textbox"
-              aria-multiline="true"
-              data-roulette="attendees"
-              data-gramm="false"
-              data-gramm_editor="false"
-              data-lt-active="false"
-              data-lpignore="true"
-              spellcheck="false"
-              class="notranslate"
-              style="white-space: pre-wrap; min-height: 240px; padding: .5rem; border: 1px solid #ccc; border-radius: 6px;"><!--
--->Amina El-Sayed
-Amir Haddad
-Chiamaka Okafor
-Ayodeji Adeyemi
-Selamawit Tesfaye
-Zhihao Chen
-Thảo Nguyễn
-Arjun Singh
-Sofía Álvarez
-Dmitry Volkov
-Agnieszka Nowak
-João Pereira
-Leilani Kealoha
-Diego Quispe
-Yael Levi
-Tāne Rangi
-Zehra Yılmaz
-Ethan Johnson
-</div>
-  <div class="rr-col">
-    <label>Organizers (one per line)</label>
-    <div contenteditable="true"
-              role="textbox"
-              aria-multiline="true"
-              data-roulette="organizers"
-              data-gramm="false"
-              data-gramm_editor="false"
-              data-lt-active="false"
-              data-lpignore="true"
-              class="notranslate"
-              spellcheck="false"
-              style="white-space: pre-wrap; min-height: 240px; padding: .5rem; border: 1px solid #ccc; border-radius: 6px;"></div>
-  </div>
-</div>
-]
-
----
-name: title
 count: false
 counter: false
 
@@ -172,7 +91,7 @@ layout: true
   <br /> .indent[.gray-text[applying volume mounts, networking, and user mapping]]
   <br />
 * .larger[<i class="fa-solid fa-circle-right"></i> Use *Docker compose* to orchestrate containers]
-  <br /> .indent[.gray-text[and deploy a basic *Apache Airflow* environment]]
+  <br /> .indent[.gray-text[and enable invoking ``docker run`` from within a container]]
   <br />
 * .larger[<i class="fa-solid fa-circle-right"></i> Establish a functional **Docker environment**.]
   <br /> .indent[.gray-text[Execute processing tasks on a laptop given a Docker environment with a prepared Jupyter notebook.]]
@@ -185,14 +104,13 @@ layout: true
 |:--:|:--|
 | 8h15 | Quick quiz (**not graded**). |
 | 8h35 | **Roulette**: What do you know/want to know about containers? |
-| 9h05 | .gray-text[Break] |
-| 9h15 | **Intro&challenge**: the first `Dockerfile` |
-| 9h45 | **Intro&challenge**: the neuroimaging container |
-| 10h05 | .gray-text[Short break] |
-| 10h15 | **Challenge**: Exploring the neuroimaging container. | <!-- 11h15 evaluation of challenge: groups present their progress -->
+| 9h05 | **Intro&challenge**: the first `Dockerfile` |
+| 9h35 | .gray-text[Short break] |
+| 9h45 | **Intro&challenge**: Docker compose 1 |
+| 11h15 | Challenge results. |
 | 11h45 | .gray-text[Lunch break] |
 | | |
-| 12h45 | **Group use-case**: Docker compose |
+| 12h45 | **Group use-case**: Docker compose 2 |
 | 15h20 | Quick quiz (repetition) |
 | 15h35 | Discussion of quiz & **outlook** for next session |
 | 15h50 | Voluntary time |
@@ -209,7 +127,8 @@ layout: true
 
 ---
 class: roulette
-time: 45
+time: 60
+include_org: true
 
 # Roulette
 
@@ -225,6 +144,8 @@ What do you know/want to know about containers?
 * <i class="fa-solid fa-circle-question"></i> Questions
 
 * <i class="fa-solid fa-comment"></i> Opinions/remarks/comments/discussion
+
+* <i class="fa-solid fa-code-fork"></i> VMs/containers: when?
 ]
 ]
 
@@ -262,14 +183,6 @@ Examples of why:
 * A new recruit joins the team
 * Version control of deployiment settings (`Dockerfile`)
 
-
----
-
-.section-mark[
-# Short break
-
-.large[We reconvene .timer[in 10 minutes].]
-]
 
 ---
 
@@ -382,17 +295,98 @@ Benefits of VMs vs containers—each VM is fully isolated:
 
 ---
 
-.boxed-content[
-<div class="asciicast" id="docker-whalesay" style="padding-top: 25px"></div>
+# Containers vs. virtual machines
+
+
+.pull-left.large[
+VMs win at:
+
+* Traditional, legacy, and/or monolithic workloads
+* Isolate risky development cycles
+* Provision infrastructure (networks, server, data)
+* Run a different OS inside another OS.
+]
+
+.pull-right.large[
+Containers win at:
+
+* Building cloud-native apps.
+* Packaging microservices.
+* Deploying applications into DevOps and CI/CD.
+* Developing and deploying in heterogeneous settings (laptops, on-prem servers, clouds, edge, HPC...)
+* Scaling projects (grow/shrink easily)
 ]
 
 ???
 
-Image = immutable filesystem + metadata.
+---
+
+# "Shipping weight"
+.boxed-content.center[
+<object type="image/svg+xml" data="images/shipment-weight-0.svg" style="width: 90%; padding-top: 10pt;"></object>
+]
+
+???
+
+---
+count: false
+
+# "Shipping weight"
+.boxed-content.center[
+<object type="image/svg+xml" data="images/shipment-weight-1.svg" style="width: 90%; padding-top: 10pt;"></object>
+]
+
+???
+
+‘Bare metal’ is a term that refers to a computer or server that runs on physical hardware and does not require assistance from hypervisors, virtual machines, or containerization in order to operate.
+
+---
+count: false
+
+# "Shipping weight"
+.boxed-content.center[
+<object type="image/svg+xml" data="images/shipment-weight-2.svg" style="width: 90%; padding-top: 10pt;"></object>
+]
+
+???
+
+---
+count: false
+
+# "Shipping weight"
+.boxed-content.center[
+<object type="image/svg+xml" data="images/shipment-weight-3.svg" style="width: 90%; padding-top: 10pt;"></object>
+]
+
+???
+
+---
+count: false
+
+# "Shipping weight"
+.boxed-content.center[
+<object type="image/svg+xml" data="images/shipment-weight-4.svg" style="width: 90%; padding-top: 10pt;"></object>
+]
+
+???
+
+---
+
+# Docker images vs. containers
+
+.boxed-content.center[
+<img src="https://lh6.googleusercontent.com/H8mhf23JNy-zCPrLaNs_H4h6K1xLRHv-P0JS4_Ad86xSo7En4tLT3POuOJPrcBNXG5lWDy2Y6fdNzRrzoB9SSLxrHhwrdk-qO28__D19NzO01OkkyBdr7YzZo2K_46HidAoUpmxeW2FOF42uOtAg3Pnfe_gcWafYs7xYywgdFeRdK3kV-p7LfIY7Z9h9tg" style="width: 80%" />
+]
+
+???
+
+Image = immutable filesystem changes + metadata.
 
 Container = runtime instance of an image.
 
 Whalesay works the same in all your computers.
+
+[Why we need a different container purely for apps - Mark Suttleworth (Canonical)](https://www.youtube.com/watch?v=0z3yusiCOCk&t=550s)
 
 ---
 
@@ -430,39 +424,10 @@ How this recipe translates into natural language:
 
 ---
 
-.boxed-content[
-<div class="asciicast" id="docker-build" style="padding-top: 25px"></div>
-]
-
-???
-
----
-class: group-roulette
-groups: 5
-seed: 18.09.2025
-
-<br />
-
-# **Group Challenge**
-
-.boxed-content[
-<p style="padding: 20px 0 20px;">
-.text-gray.large[Edit the example to create the coolest *chatty cow*.]
-</p>
-]
-
-???
-
-Tip: existing cows: https://github.com/paulkaefer/cowsay-files/tree/main/cows
-
-Bonus: use mounting to change the cow at run time.
-
----
-
-# Docker Hub
+# First line: `FROM alpine`
 
 .boxed-content.larger.no-bullet[
-* .large[<i class="fa-solid fa-circle-right"></i> Where did `alpine` come from?]
+* .large[<i class="fa-solid fa-circle-right"></i> Where does that `alpine` in `FROM alpine` come from?]
   <br /> .indent[From the *Docker Hub*: https://hub.docker.com/_/alpine]
 
 .center[<img src="images/dockerhub-alpine.png" style="width: 56%" />]
@@ -475,264 +440,67 @@ images.
 
 ---
 
-# Demystifying multi-stage builds
-
-.boxed-content.center[
-<img src="https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fceg39lx4%2Fproduction%2Fdef396ac1d42cd9f1d4a83647a597976e2951618-1364x720.png" style="padding-top: 60px" />
-]
-
----
-
-# Demystifying multi-stage builds: neuroimaging image
-
 .boxed-content[
-First image, the `downloader`:
-
-```Dockerfile
-# Argument (variable) to easly change base image
-ARG BASE_IMAGE=ubuntu:jammy-20240125
-
-
-# Image for creating neuroimaging docker images
-FROM ${BASE_IMAGE} as downloader
-
-# Cache buster: change date to force rebuild of all derived images
-RUN echo "2024.03.18"
-
-# Install basic necessary software
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y --no-install-recommends \
-                    binutils \
-                    bzip2 \
-                    ca-certificates \
-                    curl \
-                    unzip && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-```
-]
-
----
-count: false
-
-.boxed-content[
-Second image: derive from the `downloader` image an image for the AFNI neuroimaging toolbox:
-
-.small[
-```
-FROM downloader as afni
-RUN echo "2024.03.18"  # Cache buster
-RUN mkdir -p /opt/afni-latest \
-    && curl -fsSL --retry 5 https://afni.nimh.nih.gov/pub/dist/tgz/linux_openmp_64.tgz \
-    | tar -xz -C /opt/afni-latest --strip-components 1 \
-    --exclude "linux_openmp_64/*.gz" \
-    --exclude "linux_openmp_64/funstuff" \
-    --exclude "linux_openmp_64/shiny" \
-    --exclude "linux_openmp_64/afnipy" \
-    --exclude "linux_openmp_64/lib/RetroTS" \
-    --exclude "linux_openmp_64/lib_RetroTS" \
-    --exclude "linux_openmp_64/meica.libs" \
-    # && /opt/afni-latest/@update.afni.binaries -package linux_openmp_64 -do_extras -quiet \
-    # Keep only what we use
-    && find /opt/afni-latest -type f -not \( \
-            -name "3dAFNItoNIFTI" \
-        -or -name "3dAutomask" \
-        -or -name "3dcalc" \
-        -or -name "3dFWHMx" \
-        -or -name "3dinfo" \
-        -or -name "3dmaskave" \
-        -or -name "3dSeg" \
-        -or -name "3dSkullStrip" \
-        -or -name "3dTnorm" \
-        -or -name "3dToutcount" \
-        -or -name "3dTqual" \
-        -or -name "3dTshift" \
-        -or -name "3dTstat" \
-        -or -name "3dUnifize" \
-        -or -name "3dvolreg" \
-        -or -name "afni" \
-       \) -delete
-```
-]
-]
-
----
-counter: false
-
-.boxed-content[
-Third, use an image from DockerHub to derive a Python distribution. We start installing dependencies.
-
-.small[
-```
-FROM nipreps/miniconda:py39_2403.0
-
-ARG DEBIAN_FRONTEND=noninteractive
-ENV LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu:${CONDA_PATH}/lib"
-ENV CONDA_PATH="/opt/conda"
-
-# Configure PPAs for libpng12 and libxp6
-RUN GNUPGHOME=/tmp gpg --keyserver hkps://keyserver.ubuntu.com --no-default-keyring --keyring /usr/share/keyrings/linuxuprising.gpg --recv 0xEA8CACC073C3DB2A \
-    && GNUPGHOME=/tmp gpg --keyserver hkps://keyserver.ubuntu.com --no-default-keyring --keyring /usr/share/keyrings/zeehio.gpg --recv 0xA1301338A3A48C4A \
-    && echo "deb [signed-by=/usr/share/keyrings/linuxuprising.gpg] https://ppa.launchpadcontent.net/linuxuprising/libpng12/ubuntu jammy main" > /etc/apt/sources.list.d/linuxuprising.list \
-    && echo "deb [signed-by=/usr/share/keyrings/zeehio.gpg] https://ppa.launchpadcontent.net/zeehio/libxp/ubuntu jammy main" > /etc/apt/sources.list.d/zeehio.list
-
-# Dependencies for AFNI; requires a discontinued multiarch-support package from bionic (18.04)
-RUN apt-get update -qq \
-    && apt-get install -y -q --no-install-recommends \
-           ed \
-           gsl-bin \
-           libglib2.0-0 \
-           libglu1-mesa-dev \
-           libglw1-mesa \
-           libgomp1 \
-           libjpeg62 \
-           libpng12-0 \
-           libxm4 \
-           libxp6 \
-           netpbm \
-           tcsh \
-           xfonts-base \
-           xvfb \
-    && curl -sSL --retry 5 -o /tmp/multiarch.deb http://archive.ubuntu.com/ubuntu/pool/main/g/glibc/multiarch-support_2.27-3ubuntu1.5_amd64.deb \
-    && dpkg -i /tmp/multiarch.deb \
-    && rm /tmp/multiarch.deb \
-    && apt-get install -f \
-
-    # CODE CONTINUES A LITTLE LONGER, see original file
-```
-]
-]
-
----
-counter: false
-
-.boxed-content[
-Fourth, we now ensure a sutable environment is created from the AFNI image.
-
-```
-ENV AFNI_DIR="/opt/afni"
-# -------------------------------------------------------------------------------- Key section
-COPY --from=afni /opt/afni-latest ${AFNI_DIR}  # <- We can copy from another image
-# --------------------------------------------------------------------------------
-ENV PATH="${AFNI_DIR}:$PATH" \
-    AFNI_IMSAVE_WARNINGS="NO" \
-    AFNI_MODELPATH="${AFNI_DIR}/models" \
-    AFNI_TTATLAS_DATASET="${AFNI_DIR}/atlases" \
-    AFNI_PLUGINPATH="${AFNI_DIR}/plugins"
-
-# Install ANTs (Advanced Normalization ToolS) from conda-forge
-RUN micromamba install -n base -c conda-forge "ants=2.5" \
-            && sync \
-	    && micromamba clean -afy; sync \
-	    && ldconfig
-
-# Install additional Python software: images visualizer and Jupyter
-RUN python -m pip install ipyniivue jupyter
-```
-]
-
----
-counter: false
-
-.boxed-content[
-(5) Create a user `databot` so the container is not logged in as root (default).
-
-```
-# Create a shared $HOME directory
-RUN useradd -m -s /bin/bash -G users databot
-WORKDIR /home/databot
-ENV HOME="/home/databot"
-
-USER databot
-
-# Pacify datalad
-RUN git config --global user.name "302 data computation" \
-    && git config --global user.email "302@hes-so.ch"
-
-RUN micromamba shell init -s bash
-ENV PATH="${CONDA_PATH}/bin:$PATH" \
-    CPATH="${CONDA_PATH}/include:$CPATH" \
-    LD_LIBRARY_PATH="${CONDA_PATH}/lib:$LD_LIBRARY_PATH"
-```
-]
-
----
-counter: false
-
-.boxed-content[
-(6) Finally, download some data and install our app's code
-
-```Dockerfile
-# Install a dataset (ds000005) from the OpenNeuro portal, and get one image
-RUN mkdir $HOME/data $HOME/outputs \
-    && datalad clone https://github.com/OpenNeuroDatasets/ds000005 $HOME/data/ds000005 \
-    && datalad get -d $HOME/data/ds000005 $HOME/data/ds000005/sub-01/anat/sub-01_T1w.nii.gz
-
-# Make a permanent cd into /home/databot/work
-WORKDIR /home/databot/work
-
-# Insert our code into the container
-COPY brain_mri_pipeline.ipynb .
-
-# Make the container listen to port 8888 (like opening a port on a firewall)
-EXPOSE 8888
-
-# Execute this command AND arguments (see differences with ENTRYPOINT, that takes all args)
-CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
-
-```
-]
-
----
-
-# Ready to run
-
-.boxed-content.no-bullet[
-
-* .large[<i class="fa-solid fa-circle-right"></i> Recap of execution:]
-
-  .indent.large[
-  ``` Python
-  docker run --rm -it -p 8888:8888 oesteban/neuropipeline-302
-  ```
-
-  * `oesteban/neuropipeline-302` is the image name
-  * `--rm` removes the container after exiting
-  * `-it` interactive terminal
-  * `-p 8888:8888` maps port 8888 in the container to port 8888 on the host
-  ]
-
-* .large[<i class="fa-solid fa-circle-right"></i> Once the container is spun up, the output will show a URL to access the Jupyter notebook server.]
-
+<div class="asciicast" id="docker-build" style="padding-top: 25px"></div>
 ]
 
 ???
 
 ---
 
-# Ready to run (suggestions)
+# Layers in `my_whale`
+
+.boxed-content.large[
+```Bash
+$ docker image history my_whale
+
+IMAGE          CREATED        CREATED BY                                      SIZE      COMMENT
+afdf7ad851ab   5 days ago     /bin/sh -c #(nop)  ENTRYPOINT "/usr/local/bi…   0B        
+<missing>      5 days ago     /bin/sh -c #(nop) COPY file:6a0962740d5a04ca…   369B      
+<missing>      5 days ago     /bin/sh -c #(nop) COPY file:9b4a3b07f3dd78e8…   4.13kB    
+<missing>      5 days ago     /bin/sh -c apk add --no-cache perl              38.3MB    
+<missing>      2 months ago   CMD ["/bin/sh"]                                 0B        buildkit.dockerfile.v0
+<missing>      2 months ago   ADD alpine-minirootfs-3.22.1-x86_64.tar.gz /    8.31MB    buildkit.dockerfile.v0
+```
+
+.large[Are images and containers the same?]
+]
+
+???
+
+---
+
+# Docker containers vs. images
+
+.boxed-content.center[
+<img src="https://miro.medium.com/v2/resize:fit:720/format:webp/0*HoxAZTZ2b2C7AM--" style="width: 70%" />
+]
+
+---
+class: group-roulette
+groups: 4
+seed: 18.09.2025
+
+<br />
+
+# **Group Challenge**
 
 .boxed-content[
-.large[
-Communicate host and container filesystems:
+.text-gray.large[
+Edit the example to create the coolest *chatty cow*.
+]
+.larger[
+1. Fork the example: https://github.com/oesteban/whalesay/fork
 
-```Bash
-mkdir -p work outputs
-docker run --rm -it -p 8888:8888 \
-  -v "$PWD/work":/home/databot/work \
-  -v "$PWD/outputs":/home/databot/outputs \
-  --name neuro302 \
-  oesteban/neuropipeline-302
-```
+2. Send a pull-request with your group's cow, including a new file `group-N.cow`.
 ]
-On another terminal:
+]
 
-.large[
-```Bash
-docker exec -it neuro302 bash -lc 'id; ls -l /home/databot'
-```
-]
-]
+???
+
+Tip: existing cows: https://github.com/paulkaefer/cowsay-files/tree/main/cows
+
+Bonus: use mounting to change the cow at run time.
 
 ---
 
@@ -743,8 +511,20 @@ docker exec -it neuro302 bash -lc 'id; ls -l /home/databot'
 ]
 
 ---
+
+# Docker compose
+
+.boxed-content[
+<img src="https://assets.community.aws/a/2rZiFKvUe94JUmTTO2we7sJa4Pi/1_Iz.webp?imgSize=1400x635" style="width: 100%" />
+.small[https://builder.aws.com/content/2qi9qQstGnCWguDzgLg1NgP8lBF/file-structure-of-docker-composeyml-file]
+]
+
+???
+
+
+---
 class: group-roulette
-groups: 5
+groups: 4
 seed: 18.09.2025
 
 <br />
@@ -752,9 +532,14 @@ seed: 18.09.2025
 # **Group Challenge**
 
 .boxed-content[
-<p style="padding: 20px 0 20px;">
-.text-gray.large[Investigate the `oesteban/neuropipeline-302` image.]
-</p>
+.large[
+**Problem**: Create a chatty cow web service with two containers:
+
+* Must separate the webserver and the cow content
+* Communication can be: telnet/tcp/http, ssh, socket
+* Bonus: interchangeable cows, multiple response chat, etc.
+* Where to start: [Docker Compose Quickguide](https://docs.docker.com/compose/gettingstarted/)
+]
 ]
 
 ???
@@ -819,16 +604,17 @@ compose-neuro/
 ---
 count: false
 class: group-roulette
-groups: 5
+groups: 4
 seed: 18.09.2025
 
 .boxed-content[
 # Group use-case
 
 .large[
-Understand *Docker compose*, run *Apache Airflow* and enable it to use the `oesteban/neuropipeline-302` image.
+Rebuild the `oesteban/neuropipeline-302` example, separating neuroimaging libraries and the Jupyter notebook.
 
-We reconvene in .timer[2h].
+**Bonus**: Set up a third service with *Apache Airflow* (they provide a starting docker compose file).
+
 ]
 ]
 
@@ -911,7 +697,7 @@ See you next time: 22.09.2025 @ 8h15 (in <span class="timer" data-until="2025-09
         allcasts.set(slideNumber, AsciinemaPlayer.create(
             `images/${castid}.cast`,
             document.getElementById(castid),
-            { autoPlay: true, speed: 1, idle_time_limit: 8, rows: 24, cols: 100 }
+            { autoPlay: true, speed: 1.4, idle_time_limit: 8, rows: 24, cols: 100 }
         ));
 
       });

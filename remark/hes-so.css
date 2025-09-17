@@ -143,11 +143,6 @@ code {
 .pull-right {
     float: right;
     width: 45%;
-    height: 75%;
-}
-
-.pull-right~p {
-    clear: both;
 }
 
 #slideshow .slide .content code {
@@ -616,6 +611,9 @@ blockquote p {
 }
 
 .remark-slide-content.cover .remark-slide-number { display: none !important; }
+
+.clear { clear: both; }
+.border { border: 1px solid red; }
 
 :root{
   /* tweak to taste */
