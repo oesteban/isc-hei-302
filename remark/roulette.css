@@ -95,10 +95,10 @@
 .rr-btn:hover{ filter: brightness(0.98); }
 .rr-btn:active{ transform: translateY(1px); }
 
-/* Groups overlay covers the content area but does not affect layout */
 .gr-overlay{
-  position: absolute;
-  left: 35px; right: 35px; top: 70px; bottom: 20px;
+  position: static;
+  left: auto; right: auto; top: auto; bottom: auto;
+  margin-top: 40px;           /* space above the grid inside the box */
   z-index: 90;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -106,16 +106,6 @@
   align-content: start;
   pointer-events: auto; /* allow selection/copy */
 }
-
-/* When the grid is placed inside .boxed-content, render it in-flow */
-.gr-overlay.in-box{
-  position: static;
-  left: auto; right: auto; top: auto; bottom: auto;
-  margin-top: 12px;           /* space above the grid inside the box */
-}
-
-/* Make .boxed-content a block formatting context if needed */
-.group-roulette .boxed-content{ position: relative; }
 
 /* Group card */
 .gr-group{
