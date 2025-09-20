@@ -4,3 +4,6 @@
 [submodule "week1/day2/302-whalesay"]
 	path = week1/day2/302-whalesay
 	url = https://github.com/oesteban/whalesay
+[submodule "week1/day2/302-docker-compose-neuro"]
+	path = week1/day2/302-docker-compose-neuro
+	url = https://github.com/oesteban/302-docker-compose-neuro.git
