@@ -7,3 +7,6 @@
 [submodule "week1/day2/302-docker-compose-neuro"]
 	path = week1/day2/302-docker-compose-neuro
 	url = https://github.com/oesteban/302-docker-compose-neuro.git
+[submodule "week2/day1/302-docker-airflow"]
+	path = week2/day1/302-docker-airflow
+	url = git@github.com:oesteban/302-docker-airflow.git
