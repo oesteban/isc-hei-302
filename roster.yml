@@ -1,0 +1,31 @@
+# roster.yml (private, classroom-specific)
+attendees:
+  - Amina El-Sayed
+  - Amir Haddad
+  - Chiamaka Okafor
+  - Ayodeji Adeyemi
+  - Selamawit Tesfaye
+  - Zhihao Chen
+  - Thảo Nguyễn
+  - Arjun Singh
+  - Sofía Álvarez
+  - Dmitry Volkov
+  - Agnieszka Nowak
+  - João Pereira
+  - Leilani Kealoha
+  - Diego Quispe
+  - Yael Levi
+  - Tāne Rangi
+  - Zehra Yılmaz
+  - Ethan Johnson
+
+organizers:
+  - Ada Lovelace  # considered the first computer programmer.
+  - Grace Hopper  # The first compiler, Flow-Matic, COBOL.
+  - Margaret Hamilton  # led the development of the on-board flight software for NASA's Apollo program.
+  - Radia Perlman  # major figure in assembling the networks and technology to enable what we now know as the Internet.
+  - Carol Shaw  # one of the first female game designers; created River Raid for Activision.
+  - Adele Goldberg  # co-developer of Smalltalk-80.
+  - Anita Borg  # has fundamental contributions to Unix-based OSs, tracing high-speed memory systems, mail/communications and advocate of women programmers.
+  - Edith Clarke  # laid the foundation for the smart grid.
+  - Elizabeth Feinler  # Director of the Network Information Systems Center at the Stanford Research Institute, her work contributed to developing Internet.

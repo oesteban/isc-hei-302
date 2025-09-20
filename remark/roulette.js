@@ -4,12 +4,8 @@
 
   // ---------- Utils ----------
   const DEFAULT_ROSTER = {
-    attendees: [
-      "Amina El-Sayed","Amir Haddad","Chiamaka Okafor","Ayodeji Adeyemi","Selamawit Tesfaye",
-      "Zhihao Chen","Thảo Nguyễn","Arjun Singh","Sofía Álvarez","Dmitry Volkov","Agnieszka Nowak",
-      "João Pereira","Leilani Kealoha","Diego Quispe","Yael Levi","Tāne Rangi","Zehra Yılmaz","Ethan Johnson"
-    ],
-    organizers: ["Oscar Esteban","Ada Lovelace","Grace Hopper"]
+    attendees: [],
+    organizers: []
   };
 
   const uniqSort = (arr) => {
