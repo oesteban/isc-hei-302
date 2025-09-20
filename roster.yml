@@ -1,4 +1,6 @@
-# roster.yml (private, classroom-specific)
+# roster.yml
+# To keep real names out of Git: git update-index --assume-unchanged roster.yml
+# To re-track again: git update-index --no-assume-unchanged roster.yml
 attendees:
   - Amina El-Sayed
   - Amir Haddad
@@ -18,6 +20,9 @@ attendees:
   - Tāne Rangi
   - Zehra Yılmaz
   - Ethan Johnson
+
+observers:
+  - Vanja Tufvesson  # Pink programming network
 
 organizers:
   - Ada Lovelace  # considered the first computer programmer.
