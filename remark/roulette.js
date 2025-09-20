@@ -5,6 +5,7 @@
   // ---------- Utils ----------
   const DEFAULT_ROSTER = {
     attendees: [],
+    observers: [],
     organizers: []
   };
 
@@ -27,7 +28,7 @@
     //   - Name
     // organizers:
     //   - Name
-    const out = { attendees: [], organizers: [] };
+    const out = { attendees: [], observers: [], organizers: [] };
     let cur = null;
     (text || '').split(/\r?\n/).forEach(line => {
       const raw = line.replace(/#.*$/, ''); // strip comments
@@ -36,10 +37,11 @@
       const sect = t.match(/^([A-Za-z_]+)\s*:\s*$/);
       if (sect) { cur = sect[1].toLowerCase(); return; }
       const item = t.match(/^-+\s*(.+)$/);
-      if (item && (cur === 'attendees' || cur === 'organizers')) out[cur].push(item[1].trim());
+      if (item && (cur === 'attendees' || cur === 'organizers' || cur === 'observers')) out[cur].push(item[1].trim());
     });
     return {
       attendees: uniqSort(out.attendees),
+      observers: uniqSort(out.observers),
       organizers: uniqSort(out.organizers)
     };
   }
@@ -75,7 +77,7 @@
   // ---------- Module ----------
   const Roulette = {
     _slideshow: null,
-    state: { attendees: [], organizers: [] },
+    state: { attendees: [], observers: [], organizers: [] },
     _active: null,
     _keyHandler: null,
     _rosterReady: false,
@@ -85,6 +87,7 @@
       this._slideshow = slideshow;
       this.state = {
         attendees: uniqSort(DEFAULT_ROSTER.attendees),
+        observers: uniqSort(DEFAULT_ROSTER.observers),
         organizers: uniqSort(DEFAULT_ROSTER.organizers)
       };
       this._loadRoster(); // async; overrides defaults if roster.yml exists
@@ -112,6 +115,7 @@
         const text = await res.text();
         const parsed = parseRosterYAML(text);
         if (parsed.attendees.length) this.state.attendees = parsed.attendees;
+        if (parsed.observers.length) this.state.observers = parsed.observers;
         if (parsed.organizers.length) this.state.organizers = parsed.organizers;
       } catch (_) {
         // keep defaults
@@ -224,10 +228,11 @@
     },
 
     _buildRunOrder(seed, includeOrg) {
-      const p = this.state.attendees.slice();
+      const a = this.state.attendees.slice();
+      const p = a.concat(this.state.observers.slice());
       const o = this.state.organizers.slice();
-      const pp = seededShuffle(p, seed + '|P');
-      const oo = seededShuffle(o, seed + '|O');
+      const pp = seededShuffle(p,  seed ? (seed + '|P') : '');
+      const oo = seededShuffle(o,  seed ? (seed + '|O') : '');
       return includeOrg ? oo.concat(pp) : pp;
     },
 
