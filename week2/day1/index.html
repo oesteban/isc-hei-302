@@ -165,26 +165,6 @@ time: 45
 
 ---
 
-# Objectives (for this intro)
-
-.boxed-content.larger.no-bullet[
-* .large[<i class="fa-solid fa-circle-right"></i> Understand **what problems** *Airflow* solves]
-  <br /> .indent[.gray-text[repeatable orchestration, dependencies, scheduling, monitoring]]
-  <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Name *Airflow* **components** and **core concepts**]
-  <br /> .indent[.gray-text[DAG, task, operator, scheduler, webserver, executor, metadata DB]]
-  <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Explain **scheduling semantics**]
-  <br /> .indent[.gray-text[start date & schedule, logical date, catchup/backfill, retries]]
-  <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Read the **UI** (Graph/Grid) and **logs** to debug runs]
-  <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Be ready for the hands-ons:]
-  <br /> .indent[.gray-text[BashOperator & PythonOperator today; DockerOperator after lunch]]
-]
-
----
-
 # Why Airflow?
 
 .boxed-content.larger.no-bullet[
@@ -538,7 +518,7 @@ Now, open **http://localhost:8080** and log in with `airflow / airflow`.
 * .large[<i class="fa-solid fa-calculator"></i> **count_shards**: count words]
   <br /> .indent.gray-text[runs four **count_words_shard_nn** in parallel]
 
-* .large[<i class="fa-solid fa-calculator"></i> **aggregate_counts**: prepare for use]
+* .large[<i class="fa-solid fa-ranking-star"></i> **aggregate_counts**: prepare for use]
   <br /> .indent.gray-text[aggregate the sharded counts and generate a TSV file with all words counts]
 ]
 
