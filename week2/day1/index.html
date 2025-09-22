@@ -636,35 +636,107 @@ seed: 22.09.2025
 ]
 
 ---
-class: roulette
-time: 15
 
-# Flipped-class topics
+# Flipped-class topics: **Pipelines**
 
-.boxed-content.small[
+.boxed-content.large[
+1. ETL vs. ELT and the warehouse/lake/lakehouse triad (architectures, pros/cons, common tools).
+
+1. Data formats for pipelines: CSV/JSON vs. Parquet/Avro/ORC (schema evolution, compression, interoperability).
+
+1. Observability for pipelines: metrics, structured logs, basic tracing (what to measure and why).
+
 ]
 
 ???
 
-1. [Pipelines] ETL vs. ELT and the warehouse/lake/lakehouse triad (architectures, pros/cons, common tools).
-1. [Pipelines] Data formats for pipelines: CSV/JSON vs. Parquet/Avro/ORC (schema evolution, compression, interoperability).
-1. [Pipelines] DAG design patterns: idempotency, atomic writes, backfills, and critical-path/latency budgeting.
-1. [Pipelines] Observability for pipelines: metrics (counters/gauges/timers), structured logs, basic tracing (what to measure and why).
-1. [Pipelines] Data lineage & provenance: capturing run metadata and artifacts (concepts; OpenLineage, DVC/DataLad at a glance).
-1. [Airflow] Handling task failures on Airflow, task retry, logging and exception handling, slack notifications.
-1. [Airflow] Airflow's DAGRun operator, BranchPython operator, and XCom (control flow + passing data between tasks).
-1. [Airflow] Pipeline frameworks: Airflow vs. Dagster vs. Prefect vs. Nextflow vs. CWL (when to choose what).
-1. [Airflow] Creating DAGs and tasks with Python decorators.
-1. [Docker] Docker Compose pattern: “controller + job containers” (launch AFNI jobs from a Jupyter service via Docker SDK).
-1. [Docker] Multi-stage Docker builds & image slimming: measure size, cache hits, and reproducibility tips.
-1. [Docker] Containers vs. VMs in practice: isolation, performance, and when to choose which (mini benchmark or case study).
-1. [Docker] Volumes, user mapping, and permissions: reproducible outputs across host/container (UID/GID pitfalls & fixes).
-1. [Docker] Container security basics: rootless containers, dropping capabilities, seccomp, read-only rootfs (harden a sample image).
-1. [Spark] Fundamentals: narrow vs. wide transformations, shuffles, and partitioning (tiny wordcount + timing).
-1. [Spark] I/O and file layout: partitioning strategies, small-files problem, and choosing Parquet/ORC effectively.
-1. [Kafka] Deploy Kafka locally using Docker Compose. Explore broker logs and topic creation.
-1. [Kafka] Compare Kafka with other streaming frameworks (Pulsar, Flink, Kinesis). Focus on design trade-offs and ecosystems.
-1. [Kafka] Streaming architectures: batch vs. stream vs. micro-batch; Lambda vs. Kappa; event-time vs. processing-time, watermarks & windows.
+---
+
+# Flipped-class topics: **Airflow**
+
+.boxed-content.large[
+1. Handling task failures on Airflow, task retry, logging and exception handling, slack notifications.
+
+1. Airflow's DAGRun operator, BranchPython operator, and XComs (control flow + passing data between tasks).
+
+1. Pipeline frameworks: Airflow vs. Dagster vs. Nextflow vs. CWL.
+
+1. Demonstrating providers and creation of custom providers.
+]
+
+---
+
+# Flipped-class topics: **Docker**
+
+.boxed-content.large[
+1. Multi-stage Docker builds & image slimming: measure size, cache hits, and reproducibility tips.
+
+1. Containers vs. VMs in practice: isolation, performance, and when to choose which (mini benchmark or case study).
+
+1. Volumes, user mapping, and permissions: reproducible outputs across host/container (UID/GID pitfalls & fixes).
+
+1. Containers on HPC: Apptainer
+]
+
+???
+
+---
+
+# Flipped-class topics: **Spark and Kafka**
+
+.boxed-content.large[
+1. Spark: Dataframe vs. RDD
+
+1. Spark I/O and file layout: partitioning best practices, introduce Parquet.
+
+1. Deploy Kafka locally using Docker Compose. Explore broker logs and topic creation.
+
+1. Compare Kafka with other streaming frameworks: trade-offs and ecosystems.
+
+1. Introduction to streaming: batch vs. stream vs. micro-batch; Lambda vs. Kappa architecture.
+]
+
+???
+
+---
+class: roulette
+time: 15
+
+<br />
+.boxed-content.small[
+1. ETL vs. ELT and the warehouse/lake/lakehouse triad (architectures, pros/cons, common tools).
+
+1. Data formats for pipelines: CSV/JSON vs. Parquet/Avro/ORC (schema evolution, compression, interoperability).
+
+1. Observability for pipelines: metrics, structured logs, basic tracing (what to measure and why).
+
+1. Handling task failures on Airflow, task retry, logging and exception handling, slack notifications.
+
+1. Airflow's DAGRun operator, BranchPython operator, and XComs (control flow + passing data between tasks).
+
+1. Pipeline frameworks: Airflow vs. Dagster vs. Nextflow vs. CWL.
+
+1. Demonstrating providers and creation of custom providers.
+
+1. Multi-stage Docker builds & image slimming: measure size, cache hits, and reproducibility tips.
+
+1. Containers vs. VMs in practice: isolation, performance, and when to choose which (mini benchmark or case study).
+
+1. Volumes, user mapping, and permissions: reproducible outputs across host/container (UID/GID pitfalls & fixes).
+
+1. Containers on HPC: Apptainer
+
+1. Spark: Dataframe vs. RDD
+
+1. Spark I/O and file layout: partitioning best practices, introduce Parquet.
+
+1. Deploy Kafka locally using Docker Compose. Explore broker logs and topic creation.
+
+1. Compare Kafka with other streaming frameworks: trade-offs and ecosystems.
+
+1. Introduction to streaming: batch vs. stream vs. micro-batch; Lambda vs. Kappa architecture.
+]
+
 
 
 ---
