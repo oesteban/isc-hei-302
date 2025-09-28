@@ -65,6 +65,7 @@ Oscar Esteban &lt;<code>oscar.esteban@hevs.ch</code>>
 ---
 name: newsection
 layout: true
+counter: true
 
 .perma-sidebar[
 <p class="rotate">
@@ -74,27 +75,22 @@ layout: true
 ]
 
 ---
+counter: true
 
 # Objectives
 
 .boxed-content.larger.no-bullet[
-* .large[<i class="fa-solid fa-circle-right"></i> Explain **data transformations**]
-  <br /> .indent[.gray-text[and identify/create examples]]
+* .large[<i class="fa-solid fa-circle-right"></i> Explain the evolution of large-scale data processing]
+  <br /> .indent.gray-text[from GFS/MapReduce through Hadoop/HDFS to Apache Spark]
   <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Recognize how **tasks depend on one another**]
-  <br /> .indent[.gray-text[without feedback loops, contrast pipelines vs. representations of the internal flow of tasks]]
+* .large[<i class="fa-solid fa-circle-right"></i> Decompose a big-data problem into distributed steps]
+  <br /> .indent.gray-text[recognize *MapReduce*, and contextualize it within the evolution of the field]
   <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Apply **DAGs** to represent pipelines]
-  <br /> .indent[.gray-text[correctly encoding tasks and dependencies, and understand pipeline nesting/flattening]]
+* .large[<i class="fa-solid fa-circle-right"></i> Implement and execute a Spark workflow]
+  <br /> .indent.gray-text[20 Newsgroups word count: reporting stage-level latency and interpreting the DAG]
   <br />
-* .large[<i class="fa-solid fa-circle-right"></i> **ETL vs. ELT**, **warehouse/mart vs. lake**.]
-  <br />
-  <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Describe the notion of **scaling** and **resource limitations**]
-  <br /> .indent[.gray-text[e.g., laptop vs. HPC]]
-  <br />
-* .large[<i class="fa-solid fa-circle-right"></i> Establish a functional **Docker environment**.]
-  <br /> .indent[.gray-text[Execute processing tasks on a laptop given a Docker environment with a prepared Jupyter notebook.]]
+* .large[<i class="fa-solid fa-circle-right"></i> Identify storage sys., compute abstractions, and formats]
+  <br /> .indent.gray-text[HDFS, object stores (storage systems), RDDs, DataFrames, Polars (compute abstractions), CSV, JSON, Parquet (file formats)]
 ]
 
 ---
@@ -104,19 +100,18 @@ layout: true
 .boxed-content.program-table[
 | Time | Content |
 |:--:|:--|
-| 9h20 | Quick quiz (**not graded**). |
-| 9h40 | Explaining a pipeline (**intro**). |
-| 9h50 | .gray-text[Break] |
-| 10h10 | **Roulette**: Explaining a pipeline (game). |
-| 10h40 | **Class**: from the pipeline to DAGs. |
-| 11h15 | **Guided tutorial**: Docker primer |
+| 8h15 | Quick quiz (**not graded**). |
+| 8h45 | **Class**: Big Data computation, a historical perspective |
+| 10h05 | .gray-text[Break] |
+| 10h15 | **Roulette**: CACM Spark 2016 paper |
+| 10h45 | **Lab**: Deploy Spark locally with Docker |
+| 11h15 | **Class**: Apache Spark |
 | 11h45 | .gray-text[Lunch break] |
 | | |
-| 12h45 | **Lab**: brain pipeline |
-| 15h20 | Quick quiz (repetition) |
-| 15h35 | Discussion of quiz & **outlook** for next session |
-| 15h50 | Voluntary time |
-| 16h10 | .gray-text[End] |
+| 12h45 | **Challenge**: scale word count with Spark & Airflow |
+| 15h30 | Quick quiz (repetition) |
+| 16h00 | Discussion of quiz, next session (exam + flipped-class), questions |
+| 16h10 | .gray-text[End & Voluntary time] |
 ]
 
 ---
@@ -129,11 +124,225 @@ layout: true
 
 ---
 
-.section-mark[
-# Short break
+# Why do we need pipelines?
 
-.large[We reconvene .timer[in 10 minutes].]
+.boxed-content[
+<object type="image/svg+xml" data="images/big-data-workflow-03.svg" style="width: 100%; padding-top: 20pt;"></object>
 ]
+
+???
+
+---
+class: stepwise-svg
+
+# Let's jump back to 1998
+
+.boxed-content[
+<object type="image/svg+xml" data="images/big-data-google.svg" style="width: 100%; padding-top: 20pt;"></object>
+]
+
+???
+
+An important algorithm, that's used to rank web pages by their relative importance, is called PageRank, after Larry Page, who came up with it (I'm serious, the name has nothing to do with web pages).
+It's really a simple and brilliant algorithm, which basically counts how many links from other pages on the web point to a page. The page that has the highest count is ranked the highest (shown on top of search results). Of course, that's not the only method of determining page importance, but it's certainly the most relevant one.
+
+Cutting and Cafarella made an excellent progress. Having Nutch deployed on a single machine (single-core processor, 1GB of RAM, RAID level 1 on eight hard drives, amounting to 1TB, then worth $3 000) they managed to achieve a respectable indexing rate of around 100 pages per second.
+
+On one side it simplified the operational side of things, but on the other side it effectively limited the total number of pages to 100 million.
+
+---
+
+# Growing problems
+.boxed-content.large.no-bullet[
+* .larger[<i class="fa-solid fa-money-bill-trend-up"></i> **Cost**: data **movement** and **materialization**:]
+  * .larger.gray-text[Store **very large files** for cheap.]
+  * .larger.gray-text[**High throughput** over low latency.]
+]
+
+---
+count: false
+
+# Solution
+
+.boxed-content.large.no-bullet[
+* .larger[<i class="fa-solid fa-money-bill-trend-up"></i> **Cost**: data **movement** and **materialization**:]
+  * .larger.gray-text[Store **very large files** for cheap.]
+  * .larger.gray-text[**High throughput** over low latency.]
+
+<br />
+
+* .larger[<i class="fa-solid fa-folder-tree"></i> Resolved with a new **file system**:]
+  * .larger.gray-text[Running on ***commodity* hardware** (Cheap computers, fast to scale in numbers).]
+  * .larger.gray-text[**Fault tolerance** implemented by software.]
+]
+
+???
+
+The GFS paper states:
+The system is built from many inexpensive commodity components that often fail. It must constantly monitor itself and detect, tolerate, and recover promptly from component failures on a routine basis.
+
+---
+name: gfs1
+
+# GFS (2003)
+
+<object data="images/gfs-sosp2003.pdf" type="application/pdf" style="margin-top: 15px;" width="90%" height="75%">
+    <embed src="images/gfs-sosp2003.pdf">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="images/gfs-sosp2003.pdf">Download PDF</a>.</p>
+    </embed>
+</object>
+
+.gray-text[https://research.google/pubs/the-google-file-system/]
+
+---
+name: gfs2
+
+# GFS — how data is distributed
+
+.boxed-content.large.no-bullet[
+* <i class="fa-solid fa-file"></i> **Files** are divided in fixed-size chunks
+  <br /> .indent.gray-text[**64 MB** each.]
+  <br />
+* <i class="fa-solid fa-copy"></i> **Default 3 replicas**
+  <br /> .indent.gray-text[on different **chunkservers** (rack-aware placement).]
+  <br />
+* <i class="fa-solid fa-server"></i> A single **Master** keeps **metadata in memory**
+  <br /> .indent.gray-text[a table of (filename&chunk, locations).]
+  <br />
+* <i class="fa-solid fa-terminal"></i> **Clients** ask the Master for **chunk locations**
+  <br /> .indent.gray-text[however, read/write occurs **directly to chunkservers**.]
+]
+
+???
+
+---
+name: mr2
+class: stepwise-svg
+
+# MapReduce (2004)
+
+.boxed-content.center[
+<object type="image/svg+xml"
+        data="images/map-reduce.svg"
+        id="svg-mapreduce-quiz"
+        style="width:95%"></object>
+]
+
+???
+
+---
+
+# MapReduce (2004)
+
+<object data="images/mapreduce-osdi04.pdf" type="application/pdf" style="margin-top: 15px;" width="90%" height="75%">
+    <embed src="images/mapreduce-osdi04.pdf">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="images/mapreduce-osdi04.pdf">Download PDF</a>.</p>
+    </embed>
+</object>
+
+.gray-text[https://research.google/pubs/mapreduce-simplified-data-processing-on-large-clusters/]
+
+---
+name: mr3
+
+# MapReduce — word count (pseudocode)
+
+.boxed-content.large[
+
+``` Python
+def map(_, line):
+    for w in tokenize(line.lower()):
+        if w and w not in STOPWORDS:
+            return (w, 1)
+
+def shuffle(pairs):
+    grouped = defaultdict(list)
+    for k, v in pairs:
+        grouped[k].append(v)
+    return grouped.items()
+
+def reduce(word, counts):
+    return (word, sum(counts))
+```
+]
+
+
+---
+name: hadoop1
+
+![:img Hadoop, 40%](https://upload.wikimedia.org/wikipedia/commons/0/0e/Hadoop_logo.svg)
+
+.boxed-content.large[
+* Cutting and Cafarella were working on *Nutch* (an open-source web search engine).
+  <br /> .noindent.gray-text[Google published GFS in 2003, MapReduce in 2004.]
+
+* In January 2006, D. Cutting was hired by Yahoo!
+  <br /> .noindent.gray-text[By 2016, Hadoop was adopted by Facebook, Twitter, Amazon AWS, Microsoft, LinkedIn, etc.]
+
+* Hadoop re-implements Google's ideas: **HDFS** & **MapReduce**.
+
+* **Data locality**: send compute to where blocks live.
+]
+
+---
+
+# HDFS — overview (vs GFS)
+
+.boxed-content.large[
+* **NameNode** (metadata) / **DataNodes** (blocks)
+* Large **blocks**, replication, streaming reads
+* Write-once, read-many reality (append came later)
+
+.center[
+![:img Official HDFS architecture diagram, 48%](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/images/hdfsarchitecture.png)
+]
+]
+
+---
+name: mr_limits
+
+
+# MapReduce limitations
+
+.boxed-content.large[
+* **Iterative ML/graph** workloads: too many **re-reads** and **shuffles**.
+
+* **Materialization** between stages → heavy **disk I/O**.
+
+* Limited **optimization** opportunities at the MapReduce job level.
+
+* Users wanted **interactive** and **iterative** workloads.
+]
+
+---
+name: spark1
+
+# Apache Spark (2009-2016)
+
+.boxed-content.large[
+* **HDFS** becomes a long-term storage layer.
+
+* Immediate access now with **Resilient Distributed Dataset** (RDD).
+  <br /> .gray-text[Data is loaded from HDFS **once**, then cached in memory.]
+
+* Operations are chained in a **DAG**
+
+* **Materialize** the output only at the end of the pipeline.
+  <br /> .gray-text[To HDFS or other storage systems (S3, etc.).]
+]
+
+---
+
+# Apache Spark (2016)
+
+<object data="images/spark-cacm2016.pdf" type="application/pdf" style="margin-top: 15px;" width="90%" height="75%">
+    <embed src="images/spark-cacm2016.pdf">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="images/spark-cacm2016.pdf">Download PDF</a>.</p>
+    </embed>
+</object>
+
+.gray-text[doi:[10.1145/2934664](https://doi.org/10.1145/2934664)]
+
 
 ---
 
@@ -142,6 +351,317 @@ layout: true
 
 .large[We reconvene .timer[in 10 minutes].]
 ]
+
+---
+class: roulette
+seed: 29.09.2025
+time: 120
+
+.section-mark[
+# Spark paper
+
+.large[
+What has called your attention? <br />
+What are RDDs and why they are important? <br />
+What are the main features of RDDs? <br />
+What components can you name in the Spark architecture? <br />
+
+]
+]
+
+---
+class: group-roulette
+groups: 4
+seed: 29.09.2025
+
+<br />
+
+# Group challenge: Deploy Spark locally with Docker
+
+---
+
+.section-mark[
+# Word count in Spark
+]
+
+---
+
+# The *20 Newsgroups* dataset
+
+.boxed-content[
+
+.large[Example: `doc_116.txt` (total ~20'000 messages Usenet posts)]
+
+<br />
+
+```Text
+Subject: PC BOARD Layout Help
+From: <EH1QC@CUNYVM.BITNET>
+Organization: City University of New York
+Lines: 8
+
+Hi,  I have a few questions about laying out a PCB. I am using easytrax for dos
+which is a great program. But what my question is When laying out traces what
+thickness should they be? I am mainly designing low voltage low current boards
+for micro controller apps. What should pad sizes be for resistors? I will be
+turning to a commercial PCB maker to produce 1's of these boards and I was
+wondering what is the minimum distance traces should be from each other. Well
+any info would be great. Thanks.
+                                                 Anton
+```
+]
+
+???
+
+---
+
+# Script *PySpark* (1)
+
+.boxed-content[
+```python
+#!/usr/bin/env python
+"""
+Spark job reading the 20 Newsgroups text files from an NFS path,
+applying a stopword filter, and printing the top 100 most frequent tokens.
+"""
+
+import os
+from pathlib import Path
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
+DATA_DIR = Path(os.getenv("SCRATCH", str(Path.home()))) / "datasets"
+STOPWORDS_PATH = DATA_DIR / "stopwords.txt"
+NEWSGROUPS_PATH = DATA_DIR / "newsgroups"
+
+# Create a set of stop words we don't want to count such as "the"
+stopword_list = {
+  line.strip().lower()
+  for line in STOPWORDS_PATH.read_text().splitlines() if line.strip()
+}
+
+```
+]
+
+???
+
+---
+count: false
+
+# Script *PySpark* (2)
+
+.boxed-content.larger[
+```python
+def main():
+    # 1. Initialize Spark
+    spark = SparkSession.builder \
+        .appName("WordCountOnNFS") \
+        .getOrCreate()
+
+    # 2. Read text files as a DataFrame (one column: "value")
+    text_df = spark.read.text(f"{NEWSGROUPS_PATH}/*.txt")
+
+    # 3. Split each line into tokens, explode into rows
+    words_df = text_df.select(
+        F.explode(
+            F.split(F.col("value"), r"\\W+")
+        ).alias("token")
+    )
+
+    # 4. Convert to lowercase
+    words_df = words_df.select(F.lower(F.col("token")).alias("token"))
+
+```
+]
+
+???
+
+---
+count: false
+
+# Script *PySpark* (3)
+
+.boxed-content.larger[
+```python
+    # 5. Filter out empty strings, numeric tokens, and stopwords
+    words_df = words_df.filter(
+        (F.col("token") != "") &
+        (~F.col("token").rlike("^[0-9]+$")) &
+        (~F.col("token").isin(stopword_list))
+    )
+
+    # 6. Group by token, count occurrences
+    counts_df = words_df.groupBy("token").count()
+
+    # 7. Get the top 15 words by descending frequency
+    top_15 = counts_df.orderBy(F.desc("count")).limit(15)
+
+    # 9. Show results
+    top_15.show(truncate=False)
+
+    spark.stop()
+
+if __name__ == "__main__":
+    main()
+```
+
+]
+
+???
+
+---
+
+# RDD vs. DataFrame
+
+.boxed-content[
+```python
+    # 2. Read text files into RDD 
+    text_rdd = spark.sparkContext.textFile(f"{NEWSGROUPS_PATH}/*.txt")
+
+    # 3-4. Convert to lowercase and split into tokens
+    tokens_rdd = text_rdd.flatMap(
+        lambda line: re.split(r"\W+", line.lower())
+    )
+
+    # 5. Filter out empty strings, numeric tokens, and stopwords
+    filtered_rdd = tokens_rdd.filter(
+        lambda token: (
+            token != "" and
+            not re.match(r'^[0-9]+$', token) and
+            token not in stopword_list
+        )
+    )
+
+    # 6. Map each token to (token, 1), then reduce
+    word_counts = filtered_rdd.map(lambda w: (w, 1)) \
+                              .reduceByKey(lambda a, b: a + b)
+
+    # 7. Retrieve the top 15 by descending frequency
+    top_15 = word_counts.takeOrdered(15, key=lambda x: -x[1])
+```
+]
+
+???
+
+---
+
+# Submission in HPC with *Slurm* (1)
+
+.boxed-content.larger[
+```bash
+#!/bin/bash
+#SBATCH --job-name=SparkWordCount
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=8
+#SBATCH --time=01:00:00
+
+module load spark/3.5.5
+
+# 1. Identify allocated nodes
+scontrol show hostnames $SLURM_NODELIST > node_list.txt
+
+# 2. Pick the first node as Spark master
+MASTER_NODE=$(head -n 1 node_list.txt)
+
+# 3. Start Spark master on MASTER_NODE
+if [ "$HOSTNAME" = "$MASTER_NODE" ]; then
+  $SPARK_HOME/sbin/start-master.sh
+fi
+```
+
+]
+
+???
+
+---
+count: false
+
+# Submission in HPC with *Slurm* (2)
+
+.boxed-content[
+```bash
+# 4. Start Spark workers on each allocated node
+for node in $(cat node_list.txt); do
+  srun -N1 -w "$node" "$SPARK_HOME/sbin/start-worker.sh" "spark://$MASTER_NODE:7077"
+done
+
+# 5. Submit the Spark job
+$SPARK_HOME/bin/spark-submit \
+  --master spark://$MASTER_NODE:7077 \
+  --deploy-mode client \
+  $PWD/wordcount.py
+
+# 6. Stop Spark workers
+for node in $(cat node_list.txt); do
+  ssh $node "$SPARK_HOME/sbin/stop-worker.sh"
+done
+
+# 7. Stop Spark master on MASTER_NODE
+if [ "$HOSTNAME" = "$MASTER_NODE" ]; then
+  $SPARK_HOME/sbin/stop-master.sh
+fi
+```
+
+]
+
+???
+
+---
+
+.boxed-content[
+<div class="asciicast" id="spark" style="padding-top: 25px"></div>
+]
+
+???
+
+---
+
+# Results
+
+.boxed-content[
+.pull-right[
+.larger[
+<br />
+File `top15_output.txt`:
+
+```Text
+one	14635
+writes	13344
+article	12275
+people	9473
+university	9431
+know	8631
+get	8343
+think	7602
+time	6711
+use	6673
+new	6385
+good	5946
+even	5380
+see	5191
+god	5062
+```
+]
+]
+
+.pull-left.large[
+<br />
+.no-bullet[
+* <i class="fa-solid fa-ranking-star"></i> The most frequent: <br />
+  .indent[*one*, *writes*, *article*]
+
+* <i class="fa-solid fa-pen-nib"></i> *writes* : <br />
+  .indent[probably should be **ignored**]
+
+* <i class="fa-solid fa-graduation-cap"></i> *university* (5<sup>th</sup>): <br />
+  .indent[also **overestimated**]
+]
+]
+
+]
+
+???
 
 ---
 
@@ -150,6 +670,20 @@ layout: true
 
 .large[We reconvene in <span class="timer">1 hour</span>.]
 ]
+
+---
+class: group-roulette
+groups: 4
+seed: 29.09.2025
+
+<br />
+.boxed-content[
+# Group challenge: scale up the word count with Spark & Airflow
+
+.large[Instead of counting the words in 20 Newsgroups, we scale to a much larger dataset (Wikipedia dump).]
+]
+
+
 
 ---
 
@@ -307,6 +841,605 @@ See you next time: 2.10.2025 @ 8h15 (in <span class="timer" data-until="2025-10-
       // kick the initially rendered slide
       visibleSlideRoots().forEach(initIn);
     })(slideshow);
+
+
+      (function () {
+        'use strict';
+
+        function parseHideRanges(value) {
+          if (!value) {
+            return [];
+          }
+
+          var ranges = [];
+          var segments = String(value)
+            .split(/[\s,]+/)
+            .map(function (segment) {
+              return segment.trim();
+            })
+            .filter(function (segment) {
+              return segment.length > 0;
+            });
+
+          for (var i = 0; i < segments.length; i++) {
+            var match = segments[i].match(/^(\d+(?:\.\d+)?)(?:\s*-\s*(\d+(?:\.\d+)?|end))?$/i);
+            if (!match) {
+              continue;
+            }
+
+            var start = parseFloat(match[1]);
+            if (!isFinite(start)) {
+              continue;
+            }
+
+            var endToken = match[2];
+            var end;
+            if (!endToken) {
+              end = start;
+            } else if (/^end$/i.test(endToken)) {
+              end = Infinity;
+            } else {
+              end = parseFloat(endToken);
+              if (!isFinite(end)) {
+                continue;
+              }
+            }
+
+            if (end < start) {
+              var temp = start;
+              start = end;
+              end = temp;
+            }
+
+            ranges.push({
+              start: start,
+              end: end
+            });
+          }
+
+          return ranges;
+        }
+
+        function isHiddenAtStep(ranges, step) {
+          if (!ranges || !ranges.length) {
+            return false;
+          }
+
+          if (typeof step !== 'number' || !isFinite(step)) {
+            return false;
+          }
+
+          for (var i = 0; i < ranges.length; i++) {
+            var range = ranges[i];
+            if (step >= range.start && step <= range.end) {
+              return true;
+            }
+          }
+
+          return false;
+        }
+
+        function StepNode(element, step, hideRanges) {
+          this.element = element;
+          this.step = step;
+          this.hideRanges = hideRanges || [];
+          this.isSvgElement = element && element.namespaceURI === 'http://www.w3.org/2000/svg';
+          this.originalDisplayStyle = element ? element.style.display : '';
+          this.originalSvgDisplay = this.isSvgElement ? element.getAttribute('display') : null;
+        }
+
+        StepNode.prototype.setVisible = function (visible) {
+          if (visible) {
+            this.show();
+          } else {
+            this.hide();
+          }
+        };
+
+        StepNode.prototype.show = function () {
+          if (this.isSvgElement) {
+            if (this.originalSvgDisplay === null) {
+              this.element.removeAttribute('display');
+            } else {
+              this.element.setAttribute('display', this.originalSvgDisplay);
+            }
+          }
+          this.element.style.display = this.originalDisplayStyle || '';
+        };
+
+        StepNode.prototype.hide = function () {
+          if (this.isSvgElement) {
+            this.element.setAttribute('display', 'none');
+          }
+          this.element.style.display = 'none';
+        };
+
+        function StepController(root) {
+          this.root = root;
+          this.stepNodes = [];
+          this.stepValues = [];
+          this._seenSteps = Object.create(null);
+          this._collect();
+        }
+
+        StepController.prototype._collect = function () {
+          if (!this.root) {
+            return;
+          }
+
+          if (this.root.nodeType === 1 && this.root.hasAttribute && this.root.hasAttribute('data-step')) {
+            this._addElement(this.root);
+          }
+
+          var elements = this.root.querySelectorAll ? this.root.querySelectorAll('[data-step]') : [];
+          for (var i = 0; i < elements.length; i++) {
+            this._addElement(elements[i]);
+          }
+
+          this.stepValues.sort(function (a, b) {
+            return a - b;
+          });
+
+          this.hideAll();
+        };
+
+        StepController.prototype._addElement = function (element) {
+          if (!element || !element.getAttribute) {
+            return;
+          }
+
+          var rawStep = element.getAttribute('data-step');
+          if (rawStep === null) {
+            return;
+          }
+
+          var stepValue = parseFloat(rawStep);
+          if (!isFinite(stepValue)) {
+            return;
+          }
+
+          var hideRanges = parseHideRanges(element.getAttribute('data-hide'));
+          var node = new StepNode(element, stepValue, hideRanges);
+          this.stepNodes.push(node);
+
+          var key = String(stepValue);
+          if (!Object.prototype.hasOwnProperty.call(this._seenSteps, key)) {
+            this._seenSteps[key] = true;
+            this.stepValues.push(stepValue);
+          }
+        };
+
+        StepController.prototype.hasSteps = function () {
+          return this.stepNodes.length > 0;
+        };
+
+        StepController.prototype.getSteps = function () {
+          return this.stepValues.slice();
+        };
+
+        StepController.prototype.applyStep = function (stepValue) {
+          var hasStep = typeof stepValue === 'number' && isFinite(stepValue);
+          for (var i = 0; i < this.stepNodes.length; i++) {
+            var node = this.stepNodes[i];
+            var visible = hasStep && stepValue >= node.step;
+            if (visible && node.hideRanges.length && isHiddenAtStep(node.hideRanges, stepValue)) {
+              visible = false;
+            }
+            node.setVisible(visible);
+          }
+        };
+
+        StepController.prototype.hideAll = function () {
+          for (var i = 0; i < this.stepNodes.length; i++) {
+            this.stepNodes[i].hide();
+          }
+        };
+
+        function StepSlide(container) {
+          this.container = container;
+          this.controllers = [];
+          this.stepOrder = [];
+          this.currentStepValue = null;
+          this.pendingAction = null;
+          this.objectControllers = new Map();
+          this.pendingObjects = new Set();
+          this._initialize();
+        }
+
+        StepSlide.prototype._initialize = function () {
+          var contentRoot = this._findContentRoot();
+          if (contentRoot) {
+            var controller = new StepController(contentRoot);
+            if (controller.hasSteps()) {
+              this.controllers.push(controller);
+            }
+          }
+
+          this._scanObjectElements();
+          this._controllersChanged();
+        };
+
+        StepSlide.prototype._findContentRoot = function () {
+          var content = this.container.querySelector('.remark-slide-content');
+          if (content) {
+            return content;
+          }
+
+          var slide = this.container.querySelector('.remark-slide');
+          if (slide) {
+            return slide;
+          }
+
+          return this.container;
+        };
+
+        StepSlide.prototype._scanObjectElements = function () {
+          var objects = this.container.querySelectorAll('object[type="image/svg+xml"]');
+          for (var i = 0; i < objects.length; i++) {
+            this._attachObjectController(objects[i]);
+          }
+        };
+
+        StepSlide.prototype._attachObjectController = function (objectEl) {
+          if (!objectEl || this.objectControllers.has(objectEl)) {
+            return;
+          }
+
+          this.objectControllers.set(objectEl, null);
+          this.pendingObjects.add(objectEl);
+
+          var self = this;
+
+          function createControllerFromObject() {
+            var doc = objectEl.contentDocument;
+            if (!doc) {
+              return { processed: false, added: false };
+            }
+
+            var previous = self.objectControllers.get(objectEl);
+            if (previous) {
+              var index = self.controllers.indexOf(previous);
+              if (index !== -1) {
+                self.controllers.splice(index, 1);
+              }
+            }
+
+            var svgRoot = doc.documentElement && doc.documentElement.tagName &&
+              doc.documentElement.tagName.toLowerCase() === 'svg'
+              ? doc.documentElement
+              : doc.querySelector('svg');
+
+            var controller = null;
+            if (svgRoot) {
+              controller = new StepController(svgRoot);
+              if (!controller.hasSteps()) {
+                controller = null;
+              }
+            }
+
+            self.objectControllers.set(objectEl, controller);
+            if (controller) {
+              self.controllers.push(controller);
+            }
+
+            self._controllersChanged();
+            return { processed: true, added: !!controller };
+          }
+
+          function finalizeProcessing(processed) {
+            if (!processed) {
+              return;
+            }
+            if (self.pendingObjects.has(objectEl)) {
+              self.pendingObjects.delete(objectEl);
+            }
+          }
+
+          objectEl.addEventListener('load', function () {
+            var result = createControllerFromObject();
+            finalizeProcessing(result.processed);
+          });
+
+          var initialResult = createControllerFromObject();
+          finalizeProcessing(initialResult.processed);
+        };
+
+        StepSlide.prototype._controllersChanged = function () {
+          this._rebuildStepOrder();
+
+          if (this.pendingAction && !this.hasSteps() && !this.isWaiting()) {
+            this.pendingAction = null;
+          }
+
+          if (this.pendingAction) {
+            var action = this.pendingAction;
+            this.pendingAction = null;
+            if (action === 'first') {
+              this.showFirst();
+              return;
+            }
+            if (action === 'all') {
+              this.showAll();
+              return;
+            }
+          }
+
+          if (this.currentStepValue !== null) {
+            if (!this.hasSteps()) {
+              this.currentStepValue = null;
+              this._hideAllControllers();
+            } else {
+              var normalized = this._normalizeStepValue(this.currentStepValue);
+              this.currentStepValue = normalized;
+              this._applyCurrentStep();
+            }
+          } else if (!this.hasSteps()) {
+            this._hideAllControllers();
+          }
+        };
+
+        StepSlide.prototype._rebuildStepOrder = function () {
+          var seen = Object.create(null);
+          var values = [];
+
+          for (var i = 0; i < this.controllers.length; i++) {
+            var controller = this.controllers[i];
+            if (!controller || !controller.hasSteps()) {
+              continue;
+            }
+
+            var steps = controller.getSteps();
+            for (var j = 0; j < steps.length; j++) {
+              var value = steps[j];
+              var key = String(value);
+              if (!Object.prototype.hasOwnProperty.call(seen, key)) {
+                seen[key] = true;
+                values.push(value);
+              }
+            }
+          }
+
+          values.sort(function (a, b) {
+            return a - b;
+          });
+          this.stepOrder = values;
+        };
+
+        StepSlide.prototype._normalizeStepValue = function (value) {
+          if (!this.hasSteps()) {
+            return null;
+          }
+
+          for (var i = 0; i < this.stepOrder.length; i++) {
+            if (this.stepOrder[i] === value) {
+              return value;
+            }
+          }
+
+          for (var j = 0; j < this.stepOrder.length; j++) {
+            if (this.stepOrder[j] > value) {
+              return this.stepOrder[j];
+            }
+          }
+
+          return this.stepOrder[this.stepOrder.length - 1];
+        };
+
+        StepSlide.prototype._applyCurrentStep = function () {
+          for (var i = 0; i < this.controllers.length; i++) {
+            this.controllers[i].applyStep(this.currentStepValue);
+          }
+        };
+
+        StepSlide.prototype._hideAllControllers = function () {
+          for (var i = 0; i < this.controllers.length; i++) {
+            this.controllers[i].hideAll();
+          }
+        };
+
+        StepSlide.prototype.hasSteps = function () {
+          return this.stepOrder.length > 0;
+        };
+
+        StepSlide.prototype.isWaiting = function () {
+          return this.pendingObjects.size > 0;
+        };
+
+        StepSlide.prototype.showFirst = function () {
+          if (!this.hasSteps()) {
+            this.pendingAction = this.isWaiting() ? 'first' : null;
+            this.currentStepValue = null;
+            this._hideAllControllers();
+            return;
+          }
+
+          this.pendingAction = null;
+          this.currentStepValue = this.stepOrder[0];
+          this._applyCurrentStep();
+        };
+
+        StepSlide.prototype.showAll = function () {
+          if (!this.hasSteps()) {
+            this.pendingAction = this.isWaiting() ? 'all' : null;
+            this.currentStepValue = null;
+            this._hideAllControllers();
+            return;
+          }
+
+          this.pendingAction = null;
+          this.currentStepValue = this.stepOrder[this.stepOrder.length - 1];
+          this._applyCurrentStep();
+        };
+
+        StepSlide.prototype.stepForward = function () {
+          if (!this.hasSteps()) {
+            return this.isWaiting();
+          }
+
+          if (this.currentStepValue === null) {
+            this.currentStepValue = this.stepOrder[0];
+            this._applyCurrentStep();
+            return true;
+          }
+
+          var index = this.stepOrder.indexOf(this.currentStepValue);
+          if (index === -1) {
+            this.currentStepValue = this.stepOrder[0];
+            this._applyCurrentStep();
+            return true;
+          }
+
+          if (index < this.stepOrder.length - 1) {
+            this.currentStepValue = this.stepOrder[index + 1];
+            this._applyCurrentStep();
+            return true;
+          }
+
+          return false;
+        };
+
+        StepSlide.prototype.stepBackward = function () {
+          if (!this.hasSteps()) {
+            return false;
+          }
+
+          if (this.currentStepValue === null) {
+            this.currentStepValue = this.stepOrder[this.stepOrder.length - 1];
+            this._applyCurrentStep();
+            return true;
+          }
+
+          var index = this.stepOrder.indexOf(this.currentStepValue);
+          if (index === -1) {
+            this.currentStepValue = this.stepOrder[this.stepOrder.length - 1];
+            this._applyCurrentStep();
+            return true;
+          }
+
+          if (index > 0) {
+            this.currentStepValue = this.stepOrder[index - 1];
+            this._applyCurrentStep();
+            return true;
+          }
+
+          return false;
+        };
+
+        function visibleSlideRoot() {
+          return document.querySelector('.remark-slide-container.remark-visible');
+        }
+
+        function slideHasStepwiseClass(slideElement) {
+          if (!slideElement) {
+            return false;
+          }
+
+          var candidates = [slideElement];
+          var remarkSlide = slideElement.querySelector('.remark-slide');
+          if (remarkSlide) {
+            candidates.push(remarkSlide);
+          }
+
+          var content = slideElement.querySelector('.remark-slide-content');
+          if (content) {
+            candidates.push(content);
+          }
+
+          for (var i = 0; i < candidates.length; i++) {
+            var candidate = candidates[i];
+            if (candidate && candidate.classList && candidate.classList.contains('stepwise-svg')) {
+              return true;
+            }
+          }
+
+          return false;
+        }
+
+        var stepSlideCache = new Map();
+        var activeStepSlide = null;
+        var lastSlideIndex = null;
+
+        function getStepSlide(index, container) {
+          if (!container) {
+            return null;
+          }
+
+          if (stepSlideCache.has(index)) {
+            var cached = stepSlideCache.get(index);
+            if (cached && cached.container !== container) {
+              cached = new StepSlide(container);
+              stepSlideCache.set(index, cached);
+            }
+            return cached;
+          }
+
+          var stepSlide = new StepSlide(container);
+          stepSlideCache.set(index, stepSlide);
+          return stepSlide;
+        }
+
+        slideshow.on('beforeHideSlide', function () {
+          activeStepSlide = null;
+        });
+
+        slideshow.on('afterShowSlide', function (slide) {
+          var slideIndex = slide.getSlideIndex();
+          var direction = 'forward';
+          if (lastSlideIndex !== null && slideIndex < lastSlideIndex) {
+            direction = 'backward';
+          }
+
+          var root = visibleSlideRoot();
+          if (!root || !slideHasStepwiseClass(root)) {
+            activeStepSlide = null;
+            lastSlideIndex = slideIndex;
+            return;
+          }
+
+          var stepSlide = getStepSlide(slideIndex, root);
+          activeStepSlide = stepSlide;
+
+          if (direction === 'backward') {
+            stepSlide.showAll();
+          } else {
+            stepSlide.showFirst();
+          }
+
+          lastSlideIndex = slideIndex;
+        });
+
+        document.addEventListener('keydown', function (event) {
+          if (!activeStepSlide) {
+            return;
+          }
+
+          if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) {
+            return;
+          }
+
+          var target = event.target;
+          if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable)) {
+            return;
+          }
+
+          var key = event.key;
+          var isForwardKey = key === 'ArrowRight' || key === 'PageDown' || key === ' ' || key === 'Spacebar';
+          var isBackwardKey = key === 'ArrowLeft' || key === 'PageUp';
+
+          if (isForwardKey) {
+            if (activeStepSlide.stepForward()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+          } else if (isBackwardKey) {
+            if (activeStepSlide.stepBackward()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+          }
+        }, true);
+      })();
+
     </script>
     <!-- Add the roulette module -->
     <script src="../../remark/roulette.js?v=4"></script>
