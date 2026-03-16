@@ -10,3 +10,6 @@
 [submodule "week2/day1/302-docker-airflow"]
 	path = week2/day1/302-docker-airflow
 	url = https://github.com/oesteban/302-docker-airflow.git
+[submodule "remark"]
+	path = remark
+	url = https://github.com/oesteban/remark-engine.git
