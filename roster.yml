@@ -1,4 +1,4 @@
-# roster.yml
+# roster.yml (private, classroom-specific)
 # To keep real names out of Git: git update-index --assume-unchanged roster.yml
 # To re-track again: git update-index --no-assume-unchanged roster.yml
 attendees:
